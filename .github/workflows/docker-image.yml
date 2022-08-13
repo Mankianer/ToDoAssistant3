@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ToDoAssistant3:$(date +%s)
+      run: docker build . --file Dockerfile --tag to-do-assistant3:$(date +%s)
