@@ -1,13 +1,13 @@
-package de.mankianer.todoassistet3;
+package de.mankianer.todoassistant3;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ToDoAssistet3Application {
+public class ToDoAssistant3Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(ToDoAssistet3Application.class, args);
+        SpringApplication.run(ToDoAssistant3Application.class, args);
     }
 
 }

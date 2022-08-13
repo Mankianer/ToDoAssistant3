@@ -1,10 +1,10 @@
-package de.mankianer.todoassistet3;
+package de.mankianer.todoassistant3;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ToDoAssistet3ApplicationTests {
+class ToDoAssistant3ApplicationTests {
 
     @Test
     void contextLoads() {

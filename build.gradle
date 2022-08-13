@@ -33,5 +33,5 @@ tasks.named('test') {
 }
 
 springBoot {
-    mainClass = 'de.mankianer.todoassistet3.ToDoAssistet3Application'
+    mainClass = 'de.mankianer.todoassistant3.ToDoAssistant3Application'
 }

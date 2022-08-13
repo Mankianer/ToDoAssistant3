@@ -1,4 +1,4 @@
-package de.mankianer.todoassistet3;
+package de.mankianer.todoassistant3;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
