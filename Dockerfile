@@ -2,6 +2,7 @@ FROM gradle:jdk18 as build
 WORKDIR /app
 COPY src/ src/
 COPY build.gradle .
+COPY MankianersTelegramSpringStarter/ MankianersTelegramSpringStarter/
 COPY settings.gradle .
 RUN gradle bootJar
 RUN ls -al build/libs
