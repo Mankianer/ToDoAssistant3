@@ -10,7 +10,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Log4j2
 @Component
@@ -28,14 +31,17 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Getter
     private List<String> allowedUsernames;
 
+    private List<Consumer<Update>> updateHandlerFunctions = new ArrayList<>();
+
     @Override
     public void onUpdateReceived(Update update) {
         if(!handleUserValidation(update)) return;
         log.info("Received update: {}", update);
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(update.getMessage().getChatId());
-        sendMessage.setText("Hallo!");
-        sendMessage(sendMessage);
+        updateHandlerFunctions.forEach(f -> f.accept(update));
+    }
+
+    public void registerUpdateHandlerFunction(Consumer<Update> updateHandlerFunction) {
+        updateHandlerFunctions.add(updateHandlerFunction);
     }
 
     /**

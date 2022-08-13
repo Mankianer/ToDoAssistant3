@@ -1,5 +1,7 @@
 package de.mankianer.todoassistant3;
 
+import de.mankianer.todoassistant3.telegram.TelegramService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +12,13 @@ import javax.annotation.PostConstruct;
 @RequestMapping("/hello")
 @RestController
 public class HelloWorld {
+
+    private final TelegramService telegramService;
+
+    public HelloWorld(TelegramService telegramService) {
+        this.telegramService = telegramService;
+        telegramService.registerMessageHandlerFunction(message -> message.reply("Hallo World!"));
+    }
 
     @PostConstruct
     public void init() {
