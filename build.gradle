@@ -30,3 +30,7 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+springBoot {
+    mainClass = 'de.mankianer.todoassistet3.ToDoAssistet3Application'
+}
