@@ -9,5 +9,5 @@ RUN ls -al build/libs
 FROM openjdk:18-jdk-alpine
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
-RUN ls -al
+EXPOSE 8080
 CMD ["java", "-jar", "app.jar"]
