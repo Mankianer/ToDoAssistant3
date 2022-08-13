@@ -1,1 +1,3 @@
 rootProject.name = 'ToDoAssistant3'
+
+include ':MankianersTelegramSpringStarter'
