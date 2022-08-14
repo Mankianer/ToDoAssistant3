@@ -13,13 +13,17 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 @Log4j2
 @Component
 @EnableConfigurationProperties(TelegramProperties.class)
 public class TelegramBot extends TelegramLongPollingBot {
+
+    private Map<String, String> registerUserChatIdMap = new HashMap<>();
 
     private List<Consumer<Update>> updateHandlerFunctions = new ArrayList<>();
 
@@ -41,19 +45,73 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     /**
-     * Sends a message to the user. If the user is not allowed to send messages.
+     * Sends a message to the user if Update was handled.
      * @param update
-     * @return true if the user is allowed
+     * @return true if Update is not handled, false if Update is handled.
      */
     private boolean handleUserValidation(Update update) {
-        if(!isUserAllowed(update.getMessage().getFrom())) {
+        User user = update.getMessage().getFrom();
+        if(!isUserAllowed(user)) {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(update.getMessage().getChatId());
             sendMessage.setText("Ich soll nicht mit Fremden reden! \nUnd dich kenn ich nicht!");
             sendMessage(sendMessage);
             return false;
         }
+        if (handleIfIsRegisterMessage(update)) return false;
+        if(!isUserRegistered(user)) {
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(update.getMessage().getChatId());
+            sendMessage.setText("Hallo " + user.getFirstName() + "! \nIch bin Mankianers ToDoAssistetBot, bitte registriere dich mit /start");
+            sendMessage(sendMessage);
+            return false;
+        }
         return true;
+    }
+
+    /**
+     *
+     * @param update
+     * @return
+     */
+    private boolean handleIfIsRegisterMessage(Update update) {
+        if(isRegisterMessage(update) && !isUserRegistered(update.getMessage().getFrom())) {
+            registerUser(update);
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(update.getMessage().getChatId());
+            sendMessage.setText("Hallo " + update.getMessage().getFrom().getFirstName() + "! \nDu bist nun Registriert! \nUm dich wieder abzumelden gebe /stop ein.");
+            sendMessage(sendMessage);
+            return true;
+        }
+        if(isUnregisterMessage(update) && isUserRegistered(update.getMessage().getFrom())) {
+            unregisterUser(update.getMessage().getFrom());
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(update.getMessage().getChatId());
+            sendMessage.setText("Du hast dich erfolgreich abgemeldet!");
+            sendMessage(sendMessage);
+            return true;
+        }
+        return false;
+    }
+
+    private void unregisterUser(User user) {
+        registerUserChatIdMap.remove(user.getUserName());
+    }
+
+    private void registerUser(Update update) {
+        registerUserChatIdMap.put(update.getMessage().getFrom().getUserName(), update.getMessage().getChatId().toString());
+    }
+
+    private boolean isRegisterMessage(Update update) {
+        return update.getMessage().getText().equals("/start");
+    }
+
+    private boolean isUnregisterMessage(Update update) {
+        return update.getMessage().getText().equals("/stop");
+    }
+
+    public boolean isUserRegistered(User user) {
+        return registerUserChatIdMap.containsKey(user.getUserName());
     }
 
     /**
@@ -71,6 +129,14 @@ public class TelegramBot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             log.error("Error sending message", e);
         }
+    }
+
+
+    public void broadcastMessage(SendMessage message) {
+        registerUserChatIdMap.forEach((username, chatId) -> {
+            message.setChatId(chatId);
+            sendMessage(message);
+        });
     }
 
     @Override

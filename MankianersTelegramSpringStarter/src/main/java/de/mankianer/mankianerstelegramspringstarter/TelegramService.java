@@ -37,4 +37,14 @@ public class TelegramService {
   public void sendMessage(SendMessage message) {
     telegramBot.sendMessage(message);
   }
+
+  public void broadcastMessage(String message) {
+    SendMessage sendMessage = new SendMessage();
+    sendMessage.setText(message);
+    telegramBot.broadcastMessage(sendMessage);
+  }
+
+  public void broadcastMessage(SendMessage message) {
+    telegramBot.broadcastMessage(message);
+  }
 }
