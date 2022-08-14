@@ -5,7 +5,6 @@ COPY build.gradle .
 COPY MankianersTelegramSpringStarter/ MankianersTelegramSpringStarter/
 COPY settings.gradle .
 RUN gradle bootJar
-RUN ls -al build/libs
 
 FROM openjdk:18-jdk-alpine
 WORKDIR /app
