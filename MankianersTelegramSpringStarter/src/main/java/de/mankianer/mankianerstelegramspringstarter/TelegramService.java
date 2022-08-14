@@ -41,7 +41,7 @@ public class TelegramService {
   public void broadcastMessage(String message) {
     SendMessage sendMessage = new SendMessage();
     sendMessage.setText(message);
-    telegramBot.broadcastMessage(sendMessage);
+    broadcastMessage(sendMessage);
   }
 
   public void broadcastMessage(SendMessage message) {

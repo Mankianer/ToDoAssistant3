@@ -23,14 +23,15 @@ import java.util.function.Consumer;
 @EnableConfigurationProperties(TelegramProperties.class)
 public class TelegramBot extends TelegramLongPollingBot {
 
-    private Map<String, String> registerUserChatIdMap = new HashMap<>();
-
     private List<Consumer<Update>> updateHandlerFunctions = new ArrayList<>();
 
     private final TelegramProperties telegramProperties;
 
-    public TelegramBot(TelegramProperties telegramProperties) {
+    private final UserHandler fileUserHandler;
+
+    public TelegramBot(TelegramProperties telegramProperties, FileUserHandler fileUserHandler) {
         this.telegramProperties = telegramProperties;
+        this.fileUserHandler = fileUserHandler;
     }
 
     @Override
@@ -59,7 +60,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             return false;
         }
         if (handleIfIsRegisterMessage(update)) return false;
-        if(!isUserRegistered(user)) {
+        if(!fileUserHandler.isUserRegistered(user)) {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(update.getMessage().getChatId());
             sendMessage.setText("Hallo " + user.getFirstName() + "! \nIch bin Mankianers ToDoAssistetBot, bitte registriere dich mit /start");
@@ -75,16 +76,16 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @return
      */
     private boolean handleIfIsRegisterMessage(Update update) {
-        if(isRegisterMessage(update) && !isUserRegistered(update.getMessage().getFrom())) {
-            registerUser(update);
+        if(isRegisterMessage(update) && !fileUserHandler.isUserRegistered(update.getMessage().getFrom())) {
+            fileUserHandler.registerUser(update);
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(update.getMessage().getChatId());
             sendMessage.setText("Hallo " + update.getMessage().getFrom().getFirstName() + "! \nDu bist nun Registriert! \nUm dich wieder abzumelden gebe /stop ein.");
             sendMessage(sendMessage);
             return true;
         }
-        if(isUnregisterMessage(update) && isUserRegistered(update.getMessage().getFrom())) {
-            unregisterUser(update.getMessage().getFrom());
+        if(isUnregisterMessage(update) && fileUserHandler.isUserRegistered(update.getMessage().getFrom())) {
+            fileUserHandler.unregisterUser(update.getMessage().getFrom());
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(update.getMessage().getChatId());
             sendMessage.setText("Du hast dich erfolgreich abgemeldet!");
@@ -92,14 +93,6 @@ public class TelegramBot extends TelegramLongPollingBot {
             return true;
         }
         return false;
-    }
-
-    private void unregisterUser(User user) {
-        registerUserChatIdMap.remove(user.getUserName());
-    }
-
-    private void registerUser(Update update) {
-        registerUserChatIdMap.put(update.getMessage().getFrom().getUserName(), update.getMessage().getChatId().toString());
     }
 
     private boolean isRegisterMessage(Update update) {
@@ -110,9 +103,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         return update.getMessage().getText().equals("/stop");
     }
 
-    public boolean isUserRegistered(User user) {
-        return registerUserChatIdMap.containsKey(user.getUserName());
-    }
 
     /**
      * checks if user is allowed to send messages
@@ -127,13 +117,13 @@ public class TelegramBot extends TelegramLongPollingBot {
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            log.error("Error sending message", e);
+            log.error("Error while sending message", e);
         }
     }
 
 
     public void broadcastMessage(SendMessage message) {
-        registerUserChatIdMap.forEach((username, chatId) -> {
+        fileUserHandler.forEach((username, chatId) -> {
             message.setChatId(chatId);
             sendMessage(message);
         });
