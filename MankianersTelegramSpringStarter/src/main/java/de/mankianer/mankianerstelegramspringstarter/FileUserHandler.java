@@ -3,6 +3,7 @@ package de.mankianer.mankianerstelegramspringstarter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
@@ -56,14 +57,16 @@ public class FileUserHandler implements UserHandler {
   }
 
   public void saveToFile() throws IOException {
-    List<String> lines = registerUserChatIdMap.entrySet().stream().map(entry -> (entry.getKey() + ":" + entry.getValue() + "\n")).toList();
+    List<String> lines =
+        registerUserChatIdMap.entrySet().stream()
+            .map(entry -> (entry.getKey() + ":" + entry.getValue() + "\n"))
+            .toList();
     Files.write(registerUserFilePath, lines);
   }
 
   @Override
-  public void registerUser(Update update) {
-    registerUserChatIdMap.put(
-        update.getMessage().getFrom().getUserName(), update.getMessage().getChatId().toString());
+  public void registerUser(Message message) {
+    registerUserChatIdMap.put(message.getFrom().getUserName(), message.getChatId().toString());
     try {
       saveToFile();
     } catch (IOException e) {
@@ -90,5 +93,4 @@ public class FileUserHandler implements UserHandler {
   public void forEach(BiConsumer<? super String, ? super String> consumer) {
     registerUserChatIdMap.forEach(consumer);
   }
-
 }

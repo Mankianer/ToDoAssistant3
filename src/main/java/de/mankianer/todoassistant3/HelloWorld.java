@@ -19,12 +19,17 @@ public class HelloWorld {
 
     public HelloWorld(TelegramService telegramService) {
         this.telegramService = telegramService;
-        telegramService.registerMessageHandlerFunction(message -> message.reply("Hallo World!"));
+    telegramService.registerMessageHandlerFunction(
+        message -> {
+          message.reply("Hallo World!");
+          return true;
+        });
     }
 
 
     @PostConstruct
     public void init() {
+        telegramService.registerCommand(new HelloTelegramCommand(telegramService));
         System.out.println("Hello World!");
     }
 

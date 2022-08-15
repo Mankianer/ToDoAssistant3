@@ -3,28 +3,29 @@ package de.mankianer.mankianerstelegramspringstarter.models;
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
 import lombok.Getter;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class TelegramInMessage {
 
     @Getter
-    private Update update;
+    private Message message;
     private TelegramService telegramService;
 
-    public TelegramInMessage(Update update, TelegramService telegramService) {
-        this.update = update;
+    public TelegramInMessage(Message message, TelegramService telegramService) {
+        this.message = message;
         this.telegramService = telegramService;
     }
 
-  public void reply(SendMessage message) {
-        message.setReplyToMessageId(update.getMessage().getMessageId());
-        message.setChatId(update.getMessage().getChatId());
-        telegramService.sendMessage(message);
+  public void reply(SendMessage sendMessage) {
+        sendMessage.setReplyToMessageId(message.getMessageId());
+        sendMessage.setChatId(message.getChatId());
+        telegramService.sendMessage(sendMessage);
   }
 
-    public void reply(String message) {
+    public void reply(String messageText) {
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setText(message);
+        sendMessage.setText(messageText);
         reply(sendMessage);
     }
 }
