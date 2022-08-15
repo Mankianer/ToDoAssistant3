@@ -4,6 +4,7 @@ import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramComm
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInUpdate;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.extensions.bots.commandbot.commands.helpCommand.HelpCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -29,6 +30,7 @@ public class TelegramService {
   @PostConstruct
   public void init() {
     telegramBot.registerUpdateHandlerFunction(this::handleMessage);
+    telegramBot.register(new HelpCommand());
   }
 
   private void handleMessage(Update update) {

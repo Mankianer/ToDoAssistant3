@@ -22,7 +22,7 @@ public class UnregisterCommand extends TelegramCommand {
       @Value("${telegram.command.unregister:stop}") String commandIdentifier,
       @Value("${telegram.command.register:start}") String registerCommandIdentifier,
       TelegramService telegramService) {
-    super(commandIdentifier, "Registriert dich.", telegramService);
+    super(commandIdentifier, "Unregistriert dich.", telegramService);
     this.registerCommandIdentifier = registerCommandIdentifier;
   }
 
