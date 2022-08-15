@@ -1,4 +1,4 @@
-package de.mankianer.mankianerstelegramspringstarter.models;
+package de.mankianer.mankianerstelegramspringstarter.commands.models;
 
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
 import lombok.Getter;

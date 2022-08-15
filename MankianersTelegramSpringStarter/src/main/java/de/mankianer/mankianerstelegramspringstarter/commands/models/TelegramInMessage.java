@@ -1,10 +1,9 @@
-package de.mankianer.mankianerstelegramspringstarter.models;
+package de.mankianer.mankianerstelegramspringstarter.commands.models;
 
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
 import lombok.Getter;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class TelegramInMessage {
 

@@ -1,9 +1,8 @@
 package de.mankianer.todoassistant3;
 
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
-import de.mankianer.mankianerstelegramspringstarter.models.TelegramCommand;
-import de.mankianer.mankianerstelegramspringstarter.models.TelegramInMessage;
-import de.mankianer.mankianerstelegramspringstarter.models.TelegramInUpdate;
+import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramCommand;
+import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInMessage;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;

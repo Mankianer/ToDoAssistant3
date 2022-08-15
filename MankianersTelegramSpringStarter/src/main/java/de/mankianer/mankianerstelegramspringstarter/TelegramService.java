@@ -1,19 +1,17 @@
 package de.mankianer.mankianerstelegramspringstarter;
 
-import de.mankianer.mankianerstelegramspringstarter.models.TelegramCommand;
-import de.mankianer.mankianerstelegramspringstarter.models.TelegramCommandInterface;
-import de.mankianer.mankianerstelegramspringstarter.models.TelegramInUpdate;
+import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramCommandInterface;
+import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInUpdate;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
 @Log4j2
@@ -74,5 +72,17 @@ public class TelegramService {
 
   public void deregisterCommand(TelegramCommandInterface command) {
     telegramBot.deregister(command);
+  }
+
+  public boolean isUserRegistered(User user) {
+    return telegramBot.isUserRegistered(user);
+  }
+
+  public void registerUser(Message message) {
+    telegramBot.registerUser(message);
+  }
+
+  public void unregisterUser(User user) {
+    telegramBot.unregisterUser(user);
   }
 }
