@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @Service
 public class TrelloService {
 
-
   private final Trello trelloApi;
 
   @Value("${trello.boardId}")
@@ -40,11 +39,11 @@ public class TrelloService {
   }
 
   @PostConstruct
-  public void init() {
-  }
+  public void init() {}
 
   /**
    * try to fetch Trello Data
+   *
    * @return true if successful
    */
   public boolean loadTrelloData() {
@@ -75,5 +74,14 @@ public class TrelloService {
     return trelloApi.getListCards(planingList.getId()).stream()
         .filter(card -> card.getDue() != null && Utils.isBevorOrToday(card.getDue()))
         .collect(Collectors.toList());
+  }
+
+  public String getPlaningCardsWithDueTodayAsMessageWithMarkdown() {
+    List<Card> planingCardsWithDueToday = getPlaningCardsWithDueToday();
+    if (planingCardsWithDueToday.size() == 0) {
+      return "";
+    }
+    return "Folgende ToDos stehen in Planung, die heute eingeplant werden müssen:\n  Du kannst diese mit /plan erneut abfragen\n"
+        + Utils.CardsToMarkdownMessage(planingCardsWithDueToday);
   }
 }

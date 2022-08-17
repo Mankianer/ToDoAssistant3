@@ -5,6 +5,7 @@ import de.mankianer.mankianerstelegramspringstarter.TelegramService;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInUpdate;
 import de.mankianer.todoassistant3.services.TrelloService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -48,5 +49,14 @@ public class TrelloController {
   private Date getDueDate() {
     return Date.from(
         LocalDate.now().plusDays(2).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+  }
+
+  @Scheduled(cron = "0 0 7,16,19,21 ? * * *")
+  public void checkToPlaningList() {
+    String planingCardsWithDueTodayAsMessageWithMarkdown =
+        trelloService.getPlaningCardsWithDueTodayAsMessageWithMarkdown();
+    if (!planingCardsWithDueTodayAsMessageWithMarkdown.isBlank()) {
+      telegramService.broadcastMessageAsMarkdown(planingCardsWithDueTodayAsMessageWithMarkdown);
+    }
   }
 }

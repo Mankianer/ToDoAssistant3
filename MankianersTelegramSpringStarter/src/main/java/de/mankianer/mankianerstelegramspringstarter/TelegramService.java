@@ -37,6 +37,13 @@ public class TelegramService {
     broadcastMessage(sendMessage);
   }
 
+  public void broadcastMessageAsMarkdown(String message) {
+    SendMessage sendMessage = new SendMessage();
+    sendMessage.setText(message);
+    sendMessage.enableMarkdownV2(true);
+    broadcastMessage(sendMessage);
+  }
+
   public void broadcastMessage(SendMessage message) {
     telegramBot.broadcastMessage(message);
   }
