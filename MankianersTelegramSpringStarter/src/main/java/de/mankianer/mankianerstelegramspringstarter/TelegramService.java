@@ -4,16 +4,12 @@ import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramComm
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInUpdate;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.extensions.bots.commandbot.commands.helpCommand.HelpCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 @Log4j2
 @Service
@@ -21,28 +17,12 @@ public class TelegramService {
 
   private final TelegramBot telegramBot;
 
-  private List<Function<TelegramInUpdate, Boolean>> messageHandlerFunctions = new ArrayList<>();
-
   public TelegramService(TelegramBot telegramBot) {
     this.telegramBot = telegramBot;
   }
 
   @PostConstruct
   public void init() {
-    telegramBot.registerUpdateHandlerFunction(this::handleMessage);
-    telegramBot.register(new HelpCommand());
-  }
-
-  private void handleMessage(Update update) {
-    for (Function<TelegramInUpdate, Boolean> function : messageHandlerFunctions) {
-      if (function.apply(new TelegramInUpdate(update, this))) {
-        return;
-      }
-    }
-  }
-
-  public void registerMessageHandlerFunction(Function<TelegramInUpdate, Boolean> messageHandlerFunction) {
-    messageHandlerFunctions.add(messageHandlerFunction);
   }
 
   public void sendMessage(SendMessage message) {
@@ -86,5 +66,10 @@ public class TelegramService {
 
   public void unregisterUser(User user) {
     telegramBot.unregisterUser(user);
+  }
+
+  public void setMessageHandlerFunction(Consumer<TelegramInUpdate> messageHandlerFuction) {
+    telegramBot.setMessageHandlerFuction(
+        update -> messageHandlerFuction.accept(new TelegramInUpdate(update, this)));
   }
 }

@@ -1,11 +1,11 @@
 package de.mankianer.todoassistant3.controller;
 
+import com.julienvey.trello.domain.Card;
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
+import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInUpdate;
 import de.mankianer.todoassistant3.services.TrelloService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import javax.annotation.PostConstruct;
 
@@ -19,6 +19,7 @@ public class TrelloController {
   public TrelloController(TrelloService trelloService, TelegramService telegramService) {
     this.trelloService = trelloService;
     this.telegramService = telegramService;
+    telegramService.setMessageHandlerFunction(this::handleIncomingMessage);
   }
 
   @PostConstruct
@@ -28,5 +29,15 @@ public class TrelloController {
     } else {
       telegramService.broadcastMessage("Trello data loaded failed!");
     }
+  }
+
+  public void handleIncomingMessage(TelegramInUpdate update) {
+    String text = update.getUpdate().getMessage().getText();
+    Card card = new Card();
+    card.setName(text);
+    card = trelloService.getPlaningList().createCard(card);
+
+    card.addLabels("ToDoAssistant");
+    update.reply("Karte wurde erstellt: " + card.getUrl());
   }
 }

@@ -5,6 +5,7 @@ import com.julienvey.trello.domain.Board;
 import com.julienvey.trello.domain.TList;
 import com.julienvey.trello.impl.TrelloImpl;
 import com.julienvey.trello.impl.http.ApacheHttpClient;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class TrelloService {
 
   private Board board;
 
-  private TList planingList;
+  @Getter private TList planingList;
   private TList todoList;
   private TList runningList;
   private TList doneList;
