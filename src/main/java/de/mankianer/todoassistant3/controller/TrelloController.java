@@ -8,6 +8,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 @Log4j2
 @Component
@@ -35,9 +38,15 @@ public class TrelloController {
     String text = update.getUpdate().getMessage().getText();
     Card card = new Card();
     card.setName(text);
+    card.setDue(getDueDate());
     card = trelloService.getPlaningList().createCard(card);
 
     card.addLabels("ToDoAssistant");
     update.reply("Karte wurde erstellt: " + card.getUrl());
+  }
+
+  private Date getDueDate() {
+    return Date.from(
+        LocalDate.now().plusDays(2).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
   }
 }

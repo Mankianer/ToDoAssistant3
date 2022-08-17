@@ -2,9 +2,11 @@ package de.mankianer.todoassistant3.services;
 
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Board;
+import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.TList;
 import com.julienvey.trello.impl.TrelloImpl;
 import com.julienvey.trello.impl.http.ApacheHttpClient;
+import de.mankianer.todoassistant3.Utils;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,10 +14,12 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
 public class TrelloService {
+
 
   private final Trello trelloApi;
 
@@ -61,5 +65,15 @@ public class TrelloService {
       log.error("Trello board has less than 4 lists");
       return false;
     }
+  }
+
+  public List<Card> getCards(TList list) {
+    return trelloApi.getListCards(list.getId());
+  }
+
+  public List<Card> getPlaningCardsWithDueToday() {
+    return trelloApi.getListCards(planingList.getId()).stream()
+        .filter(card -> card.getDue() != null && Utils.isBevorOrToday(card.getDue()))
+        .collect(Collectors.toList());
   }
 }
