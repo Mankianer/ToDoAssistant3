@@ -38,8 +38,8 @@ jobs:
           context: ./src/samples/simple
           # Note: tags has to be all lower-case
           tags: |
-            ghcr.io/Mankianer/ToDoAssistant3/todoassistant:latest
-            ghcr.io/Mankianer/ToDoAssistant3/todoassistant:$(date +%s)
+            ghcr.io/mankianer/todoassistant3/todoassistant:latest
+            ghcr.io/mankianer/todoassistant3/todoassistant:$(date +%s)
           # build on feature branches, push only on main branch
           push: ${{ github.ref == 'refs/heads/main' }}
 
