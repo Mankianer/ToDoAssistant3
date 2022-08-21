@@ -8,6 +8,7 @@ group = 'de.mankianer'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '18'
 
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
