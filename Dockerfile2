@@ -1,0 +1,19 @@
+FROM eclipse-temurin:17
+
+EXPOSE 8080
+
+WORKDIR /srv/abr1-helper
+
+# copy the Jar file to the container
+COPY ./build/libs/*.jar abr1-helper.jar
+# set command.executor.path
+ENV COMMAND_EXECUTOR_PATH="/srv/abr1-helper/"
+
+# copy scripts
+## itsg-zertifikat-erzeugung
+COPY ./scripts/itsg-zertifikat-erzeugung/* scripts/itsg-zertifikat-erzeugung/
+RUN chmod -R a+x scripts/
+
+ENV springProfilesActive=''
+
+ENTRYPOINT java -XX:+UseContainerSupport  -Dspring.profiles.active=${springProfilesActive} -jar /srv/abr1-helper/abr1-helper.jar
