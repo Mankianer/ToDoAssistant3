@@ -6,7 +6,7 @@ COPY MankianersTelegramSpringStarter/ MankianersTelegramSpringStarter/
 COPY settings.gradle .
 RUN gradle bootJar
 
-FROM openjdk:18-jdk-alpine
+FROM eclipse-temurin:18-jdk-alpine
 
 ARG app_name='ToDoAssistant'
 ENV app_name=${app_name}
