@@ -1,4 +1,4 @@
-FROM arm64v8/gradle:jdk18-focal as build
+FROM gradle:jdk18-jammy as build
 WORKDIR /app
 COPY src/ src/
 COPY build.gradle .
@@ -6,7 +6,7 @@ COPY MankianersTelegramSpringStarter/ MankianersTelegramSpringStarter/
 COPY settings.gradle .
 RUN gradle bootJar
 
-FROM arm64v8/eclipse-temurin:latest
+FROM eclipse-temurin:18-jdk-jammy
 
 ARG app_name='ToDoAssistant'
 ENV app_name=${app_name}
