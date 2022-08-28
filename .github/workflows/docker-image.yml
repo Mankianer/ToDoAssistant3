@@ -22,16 +22,15 @@ jobs:
       - uses: actions/checkout@v3
       - name: run gradlew bootJar
         run: |
-          java -version
           ./gradlew bootJar
       - uses: pguyot/arm-runner-action@v2
         id: build_image
         with:
           base_image: raspios_lite_arm64:latest
           commands: |
+            ls -al
             sudo apt-get install -yq podman
             sudo echo "unqualified-search-registries = ['docker.io']" >> /etc/containers/registries.conf
-            echo ls -al
             podman build --file Dockerfile_pi-build --tag ghcr.io/mankianer/todoassistant3:arm64 .
             podman login -u ${{ github.actor }} -p ${{ secrets.GHCR_PAT }} ghcr.io 
             podman push ghcr.io/mankianer/todoassistant3:arm64
