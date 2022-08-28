@@ -25,7 +25,7 @@ jobs:
         name: Build and Push the Docker image for aarch64
         id: runcmd
         with:
-          arch: aarch64
+          architecture: aarch64
           distro: ubuntu_latest
           run: |
             docker build . --file Dockerfile --tag ghcr.io/mankianer/todoassistant3:aarch64
