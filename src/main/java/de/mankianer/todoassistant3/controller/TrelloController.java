@@ -51,7 +51,7 @@ public class TrelloController {
         LocalDate.now().plusDays(2).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
   }
 
-  @Scheduled(cron = "0 0 7,16,19,21 ? * * *")
+  @Scheduled(cron = "${todo.checkToPlaning.cron.expression}")
   public void checkToPlaningList() {
     String planingCardsWithDueTodayAsMessageWithMarkdown =
         trelloService.getPlaningCardsWithDueTodayAsMessageWithMarkdown();
