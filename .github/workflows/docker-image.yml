@@ -15,7 +15,7 @@ jobs:
       - uses: pguyot/arm-runner-action@v2
         id: build_image
         with:
-          base_image: raspios_lite:latest
+          base_image: raspios_lite_arm64:latest
           commands: |
             curl https://download.docker.com/linux/debian/dists/bullseye/pool/stable/arm64/docker-ce-cli_20.10.17~3-0~debian-bullseye_arm64.deb -o docker-ce-cli.deb
             sudo dpkg -i docker-ce-cli.deb
