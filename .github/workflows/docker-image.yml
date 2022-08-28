@@ -32,12 +32,12 @@ jobs:
 
       - name: build images
         run: |
-          docker build . -t ghcr.io/${{ github.actor }}/${{ github.repository }}:arm64 --platform=linux/arm64
-          docker build . -t ghcr.io/${{ github.actor }}/${{ github.repository }}:amd64 --platform=linux/amd64
-          docker manifest create ghcr.io/${{ github.actor }}/${{ github.repository }}:latest ghcr.io/${{ github.actor }}/${{ github.repository }}:amd64 ghcr.io/${{ github.actor }}/${{ github.repository }}:arm64
+          docker build . -t ghcr.io/mankianer/todoassistant3:arm64 --platform=linux/arm64
+          docker build . -t ghcr.io/mankianer/todoassistant3:amd64 --platform=linux/amd64
+          docker manifest create ghcr.io/mankianer/todoassistant3:latest ghcr.io/mankianer/todoassistant3:amd64 ghcr.io/mankianer/todoassistant3:arm64
 
       - name: push images
         run: |
-          docker push ghcr.io/${{ github.actor }}/${{ github.repository }}:arm64 --platform=linux/arm64
-          docker push ghcr.io/${{ github.actor }}/${{ github.repository }}:amd64 --platform=linux/amd64
-          docker manifest push ghcr.io/${{ github.actor }}/${{ github.repository }}:latest
+          docker push ghcr.io/mankianer/todoassistant3:arm64 --platform=linux/arm64
+          docker push ghcr.io/mankianer/todoassistant3:amd64 --platform=linux/amd64
+          docker manifest push ghcr.io/mankianer/todoassistant3:latest
