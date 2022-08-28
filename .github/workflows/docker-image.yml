@@ -32,13 +32,6 @@ jobs:
         with:
           context: .
           file: ./Dockerfile_pi
-          platforms: linux/arm64
+          platforms: linux/arm64,linux/amd64
           push: true
-          tags: ghcr.io/mankianer/todoassistant3:arm64
-
-      - name: Build the Docker image for amd64
-        run: docker build . --file Dockerfile --tag ghcr.io/mankianer/todoassistant3:amd64
-      - name: Push the Docker image for amd64
-        run: docker push ghcr.io/mankianer/todoassistant3:amd64
-
-
+          tags: ghcr.io/mankianer/todoassistant3:latest
