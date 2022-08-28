@@ -28,10 +28,11 @@ jobs:
         with:
           base_image: raspios_lite_arm64:latest
           commands: |
+            pwd
             ls -al
             sudo apt-get install -yq podman
             sudo echo "unqualified-search-registries = ['docker.io']" >> /etc/containers/registries.conf
-            podman build --file Dockerfile_pi-build --tag ghcr.io/mankianer/todoassistant3:arm64 .
+            podman build --file .Dockerfile_pi-build --tag ghcr.io/mankianer/todoassistant3:arm64 .
             podman login -u ${{ github.actor }} -p ${{ secrets.GHCR_PAT }} ghcr.io 
             podman push ghcr.io/mankianer/todoassistant3:arm64
       - name: Login to Github Packages
