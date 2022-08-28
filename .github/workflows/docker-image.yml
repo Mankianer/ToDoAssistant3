@@ -19,7 +19,7 @@ jobs:
           commands: |
             curl https://download.docker.com/linux/debian/dists/bullseye/pool/stable/arm64/docker-ce-cli_20.10.17~3-0~debian-bullseye_arm64.deb -o docker-ce-cli.deb
             sudo dpkg -i docker-ce-cli.deb
-            docker build . --file Dockerfile --tag ghcr.io/mankianer/todoassistant3:arm64
+            docker build --file Dockerfile --tag ghcr.io/mankianer/todoassistant3:arm64 --platform linux/arm/v8 .
             docker login -u ${{ github.actor }} -p ${{ secrets.GHCR_PAT }} ghcr.io 
             docker push ghcr.io/mankianer/todoassistant3:arm64    
 
