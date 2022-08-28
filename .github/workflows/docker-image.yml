@@ -17,6 +17,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: run gradle bootJar
         run: |
+          java -version
           ./gradlew bootJar
       - uses: pguyot/arm-runner-action@v2
         id: build_image
