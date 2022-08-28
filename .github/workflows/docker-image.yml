@@ -35,5 +35,6 @@ jobs:
         with:
           context: .
           platforms: linux/arm64
+          file: ./Dockerfile
           push: true
           tags: ghcr.io/mankianer/todoassistant3:latest
