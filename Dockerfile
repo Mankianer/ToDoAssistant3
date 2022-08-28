@@ -1,13 +1,15 @@
 
-ARG TARGETARCH
 FROM --platform=linux/amd64 gradle:jdk18 as build-amd64
-RUN echo "I'm building for $TARGETPLATFORM"
+ARG TARGETARCH=amd64
+RUN echo "I'm building for $TARGETARCH"
 FROM --platform=linux/amd64 eclipse-temurin:18-jdk-alpine as stage-amd64
 
 FROM --platform=linux/arm64 gradle:jdk18-jammy as build-arm64
-RUN echo "I'm building for $TARGETPLATFORM"
+ARG TARGETARCH=arm64
+RUN echo "I'm building for $TARGETARCH"
 FROM --platform=linux/arm64 eclipse-temurin:18-jdk-jammy as stage-arm64
 
+ARG TARGETARCH=arm64
 FROM build-${TARGETARCH} as build
 
 WORKDIR /app
