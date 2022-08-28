@@ -17,7 +17,7 @@ jobs:
         with:
           base_image: raspios_lite:latest
           commands: |
-            sudo apt-get install -yq docker
+            curl https://get.docker.com | bash
             docker build . --file Dockerfile --tag ghcr.io/mankianer/todoassistant3:arm64
             docker login -u ${{ github.actor }} -p ${{ secrets.GHCR_PAT }} ghcr.io 
             docker push ghcr.io/mankianer/todoassistant3:arm64    
