@@ -8,10 +8,7 @@ on:
 
 jobs:
 
-  build:
-
-    runs-on: ubuntu-latest
-
+  init:
     steps:
       - name: Login to Github Packages
         uses: docker/login-action@v1
@@ -21,16 +18,22 @@ jobs:
           password: ${{ secrets.GHCR_PAT }}
       - uses: actions/checkout@v3
 
-      - uses: uraimo/run-on-arch-action@v2
-        name: Build and Push the Docker image for aarch64
-        id: runcmd
+  build-arm64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: pguyot/arm-runner-action@v2
+        id: build_image
         with:
-          arch: aarch64
-          distro: ubuntu18.04
-          run: |
-            docker build . --file Dockerfile --tag ghcr.io/mankianer/todoassistant3:aarch64
-            docker push ghcr.io/mankianer/todoassistant3:aarch64
+          base_image: raspios_lite:latest
+          commands: |
+            docker build . --file Dockerfile --tag ghcr.io/mankianer/todoassistant3:arm64
+            docker push ghcr.io/mankianer/todoassistant3:arm64    
 
+  build-amd64:
+
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Build the Docker image for amd64
         run: docker build . --file Dockerfile --tag ghcr.io/mankianer/todoassistant3:amd64
       - name: Push the Docker image for amd64
