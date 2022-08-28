@@ -28,7 +28,7 @@ jobs:
         with:
           base_image: raspios_lite_arm64:latest
           cpu_info: cpuinfo/raspberrypi_4b
-          image_additional_mb: 512
+          image_additional_mb: 2048
           commands: |
             pwd
             ls -al
