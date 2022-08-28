@@ -20,16 +20,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_PAT }}
       - uses: actions/checkout@v3
+
+      - uses: uraimo/run-on-arch-action@v2
+          name: Build and Push the Docker image for aarch64
+          with:
+            id: runcmd
+            arch: aarch64
+            distro: ubuntu_latest
+            run: |
+              docker build . --file Dockerfile --tag ghcr.io/mankianer/todoassistant3:aarch64
+              docker push ghcr.io/mankianer/todoassistant3:aarch64
+
       - name: Build the Docker image for amd64
         run: docker build . --file Dockerfile --tag ghcr.io/mankianer/todoassistant3:amd64
       - name: Push the Docker image for amd64
         run: docker push ghcr.io/mankianer/todoassistant3:amd64
 
-      - uses: uraimo/run-on-arch-action@v2
-        name: Build and Push the Docker image for aarch64
-        with:
-          arch: aarch64
-          distro: ubuntu_latest
-          run: |
-            docker build . --file Dockerfile --tag ghcr.io/mankianer/todoassistant3:aarch64
-            docker push ghcr.io/mankianer/todoassistant3:aarch64
+
