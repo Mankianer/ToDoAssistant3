@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Log4j2
 @Service
@@ -31,5 +32,13 @@ public class ToDoService {
 
     private LocalDateTime getDueDate() {
         return LocalDateTime.now().plusDays(2);
+    }
+
+    public List<ToDo> getAllToDos() {
+        return this.toDoAdapter.loadAllToDos();
+    }
+
+    public List<ToDo> getAllToDosByStatus(ToDoStatus status) {
+        return getAllToDos().stream().filter(todo -> todo.getStatus().equals(status)).toList();
     }
 }

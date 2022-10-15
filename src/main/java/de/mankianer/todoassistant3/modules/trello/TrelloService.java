@@ -114,4 +114,9 @@ public class TrelloService implements ToDoAdapter {
   public void deleteToDo(String id) {
     trelloApi.deleteCard(id);
   }
+
+  @Override
+  public List<ToDo> loadAllToDos() {
+    return board.fetchCards().stream().map(toDo2CardMapper::mapCardToToDo).collect(Collectors.toList());
+  }
 }

@@ -1,6 +1,7 @@
 package de.mankianer.todoassistant3;
 
 import com.julienvey.trello.domain.Card;
+import de.mankianer.todoassistant3.models.todo.ToDo;
 import lombok.NonNull;
 
 import java.time.LocalDate;
@@ -24,6 +25,14 @@ public class Utils {
     LocalDate localDate = localDateTime.toLocalDate();
     LocalDate today = LocalDate.now();
     return localDate.isEqual(today) || localDate.isBefore(today);
+  }
+
+  public static String TodosToMarkdownMessage(List<ToDo> todos) {
+    String ret = "";
+    for (ToDo todo : todos) {
+      ret += String.format("\n  \\*__%s__: *%s* ", todo.getId(), todo.getName());
+    }
+    return ret;
   }
 
   public static String CardsToMarkdownMessage(List<Card> cards) {
