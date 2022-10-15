@@ -1,13 +1,24 @@
 package de.mankianer.todoassistant3.models.message;
 
-import de.mankianer.todoassistant3.models.user.User;
+import lombok.Builder;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
+@Builder
 public class Message<T> {
-    private String id;
-    private String message;
+
+    private UUID id;
+    private String text;
+    private boolean isMarkDown;
     private MessageContext<T> context;
-    private MessageThread thread;
-    private User user;
+    private Message next, previous;
+
+    public UUID getId() {
+        if(id == null) {
+            id = UUID.randomUUID();
+        }
+        return id;
+    }
 }

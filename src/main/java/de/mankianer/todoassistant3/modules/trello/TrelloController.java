@@ -1,7 +1,6 @@
-package de.mankianer.todoassistant3.modules.telegram;
+package de.mankianer.todoassistant3.modules.trello;
 
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
-import de.mankianer.todoassistant3.modules.trello.TrelloService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
