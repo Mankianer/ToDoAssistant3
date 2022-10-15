@@ -1,6 +1,7 @@
 package de.mankianer.todoassistant3.modules.trello;
 
-import de.mankianer.mankianerstelegramspringstarter.TelegramService;
+import de.mankianer.todoassistant3.models.message.Message;
+import de.mankianer.todoassistant3.services.communication.CommunicationService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -12,19 +13,19 @@ import javax.annotation.PostConstruct;
 public class TrelloController {
 
   private final TrelloService trelloService;
-  private final TelegramService telegramService;
+  private final CommunicationService communicationService;
 
-  public TrelloController(TrelloService trelloService, TelegramService telegramService) {
+  public TrelloController(TrelloService trelloService, CommunicationService communicationService) {
     this.trelloService = trelloService;
-    this.telegramService = telegramService;
+    this.communicationService = communicationService;
   }
 
   @PostConstruct
   public void init() {
     if (trelloService.loadTrelloData()) {
-      telegramService.broadcastMessage("Trello data loaded successfully");
+      communicationService.sendMessage(Message.of("Trello data loaded successfully"));
     } else {
-      telegramService.broadcastMessage("Trello data loaded failed!");
+      communicationService.sendMessage(Message.of("Trello data loaded failed!"));
     }
   }
 
@@ -33,7 +34,7 @@ public class TrelloController {
     String planingCardsWithDueTodayAsMessageWithMarkdown =
         trelloService.getPlaningCardsWithDueTodayAsMessageWithMarkdown();
     if (!planingCardsWithDueTodayAsMessageWithMarkdown.isBlank()) {
-      telegramService.broadcastMessageAsMarkdown(planingCardsWithDueTodayAsMessageWithMarkdown);
+      communicationService.sendMessage(Message.ofMd(planingCardsWithDueTodayAsMessageWithMarkdown));
     }
   }
 }

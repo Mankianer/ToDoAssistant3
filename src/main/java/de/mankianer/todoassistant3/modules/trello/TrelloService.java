@@ -7,6 +7,7 @@ import com.julienvey.trello.domain.TList;
 import com.julienvey.trello.impl.TrelloImpl;
 import com.julienvey.trello.impl.http.ApacheHttpClient;
 import de.mankianer.todoassistant3.Utils;
+import de.mankianer.todoassistant3.exceptions.CouldNotCreateException;
 import de.mankianer.todoassistant3.models.todo.ToDo;
 import de.mankianer.todoassistant3.models.todo.ToDoStatus;
 import de.mankianer.todoassistant3.services.todo.ToDoAdapter;
@@ -103,7 +104,7 @@ public class TrelloService implements ToDoAdapter {
   }
 
   @Override
-  public ToDo saveToDo(ToDo toDo) throws Exception {
+  public ToDo saveToDo(ToDo toDo) throws CouldNotCreateException {
     Card card = toDo2CardMapper.mapToDoToCard(toDo, trelloApi);
     card = trelloApi.updateCard(card);
     return Optional.of(toDo2CardMapper.mapCardToToDo(card)).get();

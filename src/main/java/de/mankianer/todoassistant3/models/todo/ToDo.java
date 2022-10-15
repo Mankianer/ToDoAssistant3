@@ -12,6 +12,7 @@ public class ToDo {
     private String id;
     private String name;
     private String description;
+    private String url;
     private ToDoStatus status;
     private LocalDateTime dueDate;
 }

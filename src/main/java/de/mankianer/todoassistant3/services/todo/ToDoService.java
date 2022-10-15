@@ -1,5 +1,6 @@
 package de.mankianer.todoassistant3.services.todo;
 
+import de.mankianer.todoassistant3.exceptions.CouldNotCreateException;
 import de.mankianer.todoassistant3.models.todo.ToDo;
 import de.mankianer.todoassistant3.models.todo.ToDoStatus;
 import lombok.extern.log4j.Log4j2;
@@ -18,7 +19,7 @@ public class ToDoService {
         this.toDoAdapter = toDoAdapter;
     }
 
-    public ToDo createToDo(String name, String description) throws Exception {
+    public ToDo createToDo(String name, String description) throws CouldNotCreateException {
         ToDo todo = ToDo.builder()
                 .name(name)
                 .description(description)

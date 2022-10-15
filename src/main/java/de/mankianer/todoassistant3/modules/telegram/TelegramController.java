@@ -2,29 +2,34 @@ package de.mankianer.todoassistant3.modules.telegram;
 
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInUpdate;
-import de.mankianer.todoassistant3.controllers.ToDoController;
+import de.mankianer.todoassistant3.exceptions.CouldNotCreateException;
 import de.mankianer.todoassistant3.models.message.Message;
+import de.mankianer.todoassistant3.models.todo.ToDo;
 import de.mankianer.todoassistant3.services.communication.CommunicationAdapter;
+import de.mankianer.todoassistant3.services.todo.ToDoService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-
-import java.util.Optional;
 
 @Component
 public class TelegramController implements CommunicationAdapter {
 
     private TelegramService telegramService;
-    private ToDoController toDoController;
+    private ToDoService toDoService;
 
-    public TelegramController(TelegramService telegramService, ToDoController toDoController) {
+    public TelegramController(TelegramService telegramService, ToDoService toDoService) {
         this.telegramService = telegramService;
-        this.toDoController = toDoController;
+        this.toDoService = toDoService;
         telegramService.setMessageHandlerFunction(this::handleIncomingMessage);
     }
 
     public void handleIncomingMessage(TelegramInUpdate update) {
         String text = update.getUpdate().getMessage().getText();
-        toDoController.createToDo(text, null, Optional.of(telegramToMessage(update.getMessage())));
+        try {
+            ToDo toDo = toDoService.createToDo(text, null);
+            update.reply("ToDo wurde erstellt: " + toDo.getUrl());
+        } catch (CouldNotCreateException e) {
+            update.reply("ToDo konnte nicht erstellt werden: \n" + e.getMessage());
+        }
     }
 
     private Message<org.telegram.telegrambots.meta.api.objects.Message> telegramToMessage(org.telegram.telegrambots.meta.api.objects.Message message) {
@@ -39,16 +44,14 @@ public class TelegramController implements CommunicationAdapter {
 
     @Override
     public void sendMessage(Message message){
-        String msgMarker = "#" + message.getId() + "\n";
-        String msg = msgMarker + message.getText();
 
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setText(msg);
+        sendMessage.setText(message.getText());
         sendMessage.enableMarkdownV2(message.isMarkDown());
 
         if(message.getPrevious() != null) {
-            if(message.getPrevious().getContext().getContext() instanceof org.telegram.telegrambots.meta.api.objects.Message) {
-                org.telegram.telegrambots.meta.api.objects.Message telegramMessage = (org.telegram.telegrambots.meta.api.objects.Message) message.getPrevious().getContext().getContext();
+            if(message.getPrevious().getContext() instanceof org.telegram.telegrambots.meta.api.objects.Message) {
+                org.telegram.telegrambots.meta.api.objects.Message telegramMessage = (org.telegram.telegrambots.meta.api.objects.Message) message.getPrevious().getContext();
                 sendMessage.setReplyToMessageId(telegramMessage.getMessageId());
             }
         }
