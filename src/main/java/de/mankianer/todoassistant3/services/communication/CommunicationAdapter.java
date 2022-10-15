@@ -1,6 +1,6 @@
 package de.mankianer.todoassistant3.services.communication;
 
-import de.mankianer.todoassistant3.model.message.Message;
+import de.mankianer.todoassistant3.models.message.Message;
 
 import java.util.function.Consumer;
 

@@ -1,6 +1,6 @@
-package de.mankianer.todoassistant3.model.message;
+package de.mankianer.todoassistant3.models.message;
 
-import de.mankianer.todoassistant3.model.user.User;
+import de.mankianer.todoassistant3.models.user.User;
 import lombok.Data;
 
 @Data

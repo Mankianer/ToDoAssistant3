@@ -1,4 +1,4 @@
-package de.mankianer.todoassistant3.module.trello;
+package de.mankianer.todoassistant3.modules.trello;
 
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Board;
@@ -7,8 +7,8 @@ import com.julienvey.trello.domain.TList;
 import com.julienvey.trello.impl.TrelloImpl;
 import com.julienvey.trello.impl.http.ApacheHttpClient;
 import de.mankianer.todoassistant3.Utils;
-import de.mankianer.todoassistant3.model.todo.ToDo;
-import de.mankianer.todoassistant3.model.todo.ToDoStatus;
+import de.mankianer.todoassistant3.models.todo.ToDo;
+import de.mankianer.todoassistant3.models.todo.ToDoStatus;
 import de.mankianer.todoassistant3.services.todo.ToDoAdapter;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -103,10 +103,10 @@ public class TrelloService implements ToDoAdapter {
   }
 
   @Override
-  public Optional<ToDo> saveToDo(ToDo toDo) throws Exception {
+  public ToDo saveToDo(ToDo toDo) throws Exception {
     Card card = toDo2CardMapper.mapToDoToCard(toDo, trelloApi);
     card = trelloApi.updateCard(card);
-    return Optional.of(toDo2CardMapper.mapCardToToDo(card));
+    return Optional.of(toDo2CardMapper.mapCardToToDo(card)).get();
   }
 
   @Override

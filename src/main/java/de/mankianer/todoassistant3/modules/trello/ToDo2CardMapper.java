@@ -1,10 +1,10 @@
-package de.mankianer.todoassistant3.module.trello;
+package de.mankianer.todoassistant3.modules.trello;
 
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
 import de.mankianer.todoassistant3.Utils;
-import de.mankianer.todoassistant3.model.todo.ToDo;
-import de.mankianer.todoassistant3.model.todo.ToDoStatus;
+import de.mankianer.todoassistant3.models.todo.ToDo;
+import de.mankianer.todoassistant3.models.todo.ToDoStatus;
 import org.springframework.lang.NonNull;
 
 import java.util.HashMap;

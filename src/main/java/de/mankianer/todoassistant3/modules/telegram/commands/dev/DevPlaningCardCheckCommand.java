@@ -1,9 +1,9 @@
-package de.mankianer.todoassistant3.telegram.commands.dev;
+package de.mankianer.todoassistant3.modules.telegram.commands.dev;
 
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramCommand;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInMessage;
-import de.mankianer.todoassistant3.controller.TrelloController;
+import de.mankianer.todoassistant3.modules.telegram.TrelloController;
 import org.springframework.stereotype.Component;
 
 @Component

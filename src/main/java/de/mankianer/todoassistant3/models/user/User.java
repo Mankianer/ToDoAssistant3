@@ -1,4 +1,4 @@
-package de.mankianer.todoassistant3.model.user;
+package de.mankianer.todoassistant3.models.user;
 
 import lombok.Data;
 
