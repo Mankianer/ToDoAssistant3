@@ -4,7 +4,7 @@ import de.mankianer.mankianerstelegramspringstarter.TelegramService;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramCommand;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInMessage;
 import de.mankianer.todoassistant3.Utils;
-import de.mankianer.todoassistant3.services.TrelloService;
+import de.mankianer.todoassistant3.module.trello.TrelloService;
 import org.springframework.stereotype.Component;
 
 @Component

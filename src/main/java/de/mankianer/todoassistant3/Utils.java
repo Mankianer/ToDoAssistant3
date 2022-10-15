@@ -15,6 +15,10 @@ public class Utils {
     return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
   }
 
+  public static Date convertToDateViaInstant(LocalDateTime dateToConvert) {
+    return java.util.Date.from(dateToConvert.atZone(ZoneId.systemDefault()).toInstant());
+  }
+
   public static boolean isBevorOrToday(@NonNull Date date) {
     LocalDateTime localDateTime = convertToLocalDateTimeViaInstant(date);
     LocalDate localDate = localDateTime.toLocalDate();

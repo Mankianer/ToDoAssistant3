@@ -8,6 +8,6 @@ public interface ToDoAdapter {
 
     Optional<ToDo> loadToDo(String id);
     Optional<ToDo> saveToDo(ToDo toDo) throws Exception;
-    Optional<ToDo> deleteToDo(String id);
+    void deleteToDo(String id);
 
 }

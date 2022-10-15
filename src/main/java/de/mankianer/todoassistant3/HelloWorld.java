@@ -1,7 +1,7 @@
 package de.mankianer.todoassistant3;
 
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
-import de.mankianer.todoassistant3.services.TrelloService;
+import de.mankianer.todoassistant3.module.trello.TrelloService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

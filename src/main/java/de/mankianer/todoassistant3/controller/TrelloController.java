@@ -3,7 +3,7 @@ package de.mankianer.todoassistant3.controller;
 import com.julienvey.trello.domain.Card;
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInUpdate;
-import de.mankianer.todoassistant3.services.TrelloService;
+import de.mankianer.todoassistant3.module.trello.TrelloService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
