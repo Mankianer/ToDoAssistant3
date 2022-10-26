@@ -1,7 +1,7 @@
-package de.mankianer.todoassistant3.services.todo;
+package de.mankianer.todoassistant3.core.services.todo;
 
-import de.mankianer.todoassistant3.exceptions.CouldNotCreateException;
-import de.mankianer.todoassistant3.models.todo.ToDo;
+import de.mankianer.todoassistant3.core.exceptions.CouldNotCreateException;
+import de.mankianer.todoassistant3.core.models.todo.ToDo;
 
 import java.util.List;
 import java.util.Optional;

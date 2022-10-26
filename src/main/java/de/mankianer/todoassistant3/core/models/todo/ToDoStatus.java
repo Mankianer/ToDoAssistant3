@@ -1,4 +1,4 @@
-package de.mankianer.todoassistant3.models.todo;
+package de.mankianer.todoassistant3.core.models.todo;
 
 public enum ToDoStatus {
     IN_PLANING,

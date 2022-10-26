@@ -1,8 +1,8 @@
-package de.mankianer.todoassistant3.services.todo;
+package de.mankianer.todoassistant3.core.services.todo;
 
-import de.mankianer.todoassistant3.exceptions.CouldNotCreateException;
-import de.mankianer.todoassistant3.models.todo.ToDo;
-import de.mankianer.todoassistant3.models.todo.ToDoStatus;
+import de.mankianer.todoassistant3.core.exceptions.CouldNotCreateException;
+import de.mankianer.todoassistant3.core.models.todo.ToDo;
+import de.mankianer.todoassistant3.core.models.todo.ToDoStatus;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

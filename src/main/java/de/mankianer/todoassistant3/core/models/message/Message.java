@@ -1,4 +1,4 @@
-package de.mankianer.todoassistant3.models.message;
+package de.mankianer.todoassistant3.core.models.message;
 
 import lombok.Builder;
 import lombok.Data;

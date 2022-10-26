@@ -1,7 +1,7 @@
 package de.mankianer.todoassistant3.modules.trello;
 
-import de.mankianer.todoassistant3.models.message.Message;
-import de.mankianer.todoassistant3.services.communication.CommunicationService;
+import de.mankianer.todoassistant3.core.models.message.Message;
+import de.mankianer.todoassistant3.core.services.communication.CommunicationService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

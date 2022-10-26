@@ -1,6 +1,6 @@
-package de.mankianer.todoassistant3.exceptions;
+package de.mankianer.todoassistant3.core.exceptions;
 
-import de.mankianer.todoassistant3.models.todo.ToDo;
+import de.mankianer.todoassistant3.core.models.todo.ToDo;
 
 public class CouldNotCreateException extends Exception {
     public CouldNotCreateException(ToDo todo, Exception e) {
