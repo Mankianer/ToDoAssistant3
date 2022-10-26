@@ -39,6 +39,6 @@ public class ToDoService {
     }
 
     public List<ToDo> getAllToDosByStatus(ToDoStatus status) {
-        return getAllToDos().stream().filter(todo -> todo.getStatus().equals(status)).toList();
+        return getAllToDos().stream().filter(todo -> status.equals(todo.getStatus())).toList();
     }
 }

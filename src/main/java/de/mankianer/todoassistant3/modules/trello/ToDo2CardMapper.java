@@ -16,21 +16,30 @@ public class ToDo2CardMapper {
     private Map<ToDoStatus, String> listIdMap = new HashMap<>();
 
     public ToDo mapCardToToDo(@NonNull Card card) {
-        return ToDo.builder()
+        ToDo.ToDoBuilder builder = ToDo.builder();
+        if(card.getDue() != null) builder.dueDate(Utils.convertToLocalDateTimeViaInstant(card.getDue()));
+        return builder
                 .id(card.getId())
                 .name(card.getName())
                 .description(card.getDesc())
                 .status(statusMap.get(card.getIdList()))
-                .dueDate(Utils.convertToLocalDateTimeViaInstant(card.getDue()))
+                .url(card.getShortUrl())
                 .build();
+
     }
 
     public Card mapToDoToCard(@NonNull ToDo toDo, Trello trello) {
-        Card card = trello.getCard(toDo.getId());
+        Card card;
+        if(toDo.getId() == null) {
+            card = new Card();
+            card = trello.createCard(listIdMap.get(toDo.getStatus()), card);
+        } else {
+            card = trello.getCard(toDo.getId());
+        }
         card.setName(toDo.getName());
         card.setDesc(toDo.getDescription());
         card.setIdList(listIdMap.get(toDo.getStatus()));
-        card.setDue(Utils.convertToDateViaInstant(toDo.getDueDate()));
+        if(toDo.getDueDate() != null) card.setDue(Utils.convertToDateViaInstant(toDo.getDueDate()));
         return card;
     }
 
