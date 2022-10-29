@@ -51,7 +51,7 @@ jobs:
         run: | 
           export version=$(docker exec build sh -c 'gradle properties ${release-task} | grep ^version: | cut -d":" -f2-')
           echo "version=${version}" >> $GITHUB_ENV
-          echo "version-image=$(echo ${version} | sed -e 's/[^a-z|0-9|.|-]/-/g'" >> $GITHUB_ENV
+          echo "version-image=$(echo ${version} | sed -e 's/[^a-z|0-9|.|-]/-/g')" >> $GITHUB_ENV
 
       - name: build images
         run: |
