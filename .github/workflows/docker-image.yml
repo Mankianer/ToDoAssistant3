@@ -42,6 +42,7 @@ jobs:
           fi
           git remote get-url origin
           git remote set-url origin $(git remote get-url origin | sed 's|https://github.com/|https://api:${{secrets.GITHUB_TOKEN}}@github.com/|g')
+          git remote get-url origin
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
@@ -57,7 +58,7 @@ jobs:
             docker exec build ls -al
 
       - name: build jar
-        run: docker exec build gradle ${{env.releaseTask}} bootJar
+        run: docker exec build gradle -Dorg.ajoberstar.grgit.auth.password='${{secrets.GITHUB_TOKEN}}' ${{env.releaseTask}} bootJar
 
       - name: export version
         run: | 
