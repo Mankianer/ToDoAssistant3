@@ -28,7 +28,7 @@ jobs:
         run: docker buildx ls
 
       - name: build jar
-        run: docker run --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle candidateSetup bootJar
+        run: docker run --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle candidate bootJar
 
       - name: build images
         run: |
