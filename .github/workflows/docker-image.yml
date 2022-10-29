@@ -40,6 +40,9 @@ jobs:
           else
             echo "releaseTask=" >> $GITHUB_ENV
           fi
+          git config --local url."https://api:${{secrets.GITHUB_TOKEN}}@github.com/".insteadOf "https://github.com/"
+          git config --local url."https://ssh:${{secrets.GITHUB_TOKEN}}@github.com/".insteadOf "ssh://git@github.com/"
+          git config --local url."https://git:${{secrets.GITHUB_TOKEN}}@github.com/".insteadOf "git@github.com:"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
@@ -52,9 +55,6 @@ jobs:
       - name: run build-container
         run: |
             docker run -d --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle --foreground
-            git config --local url."https://api:${{secrets.GITHUB_TOKEN}}@github.com/".insteadOf "https://github.com/"
-            git config --local url."https://ssh:${{secrets.GITHUB_TOKEN}}@github.com/".insteadOf "ssh://git@github.com/"
-            git config --local url."https://git:${{secrets.GITHUB_TOKEN}}@github.com/".insteadOf "git@github.com:"
 
       - name: build jar
         run: docker exec build gradle ${{env.releaseTask}} bootJar
