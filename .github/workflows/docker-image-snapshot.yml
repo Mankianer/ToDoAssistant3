@@ -51,19 +51,19 @@ jobs:
         run: | 
           export version=$(docker exec build sh -c 'gradle properties ${release-task} | grep ^version: | cut -d":" -f2-' | xargs)
           echo "version=${version}" >> $GITHUB_ENV
-          echo "version-image=$(echo ${version} | sed -e 's/[^a-z|0-9|.|-]/-/g')" >> $GITHUB_ENV
+          echo "versionImage=$(echo ${version} | sed -e 's/[^a-z|0-9|.|-]/-/g')" >> $GITHUB_ENV
 
       - name: build images
         run: |
-          docker buildx  build . -t ${registry}/mankianer/todoassistant3:arm64-${version-image} --platform linux/arm64
-          docker buildx  build . -t ${registry}/mankianer/todoassistant3:amd64-${version-image} --platform linux/amd64
+          docker buildx  build . -t ${registry}/mankianer/todoassistant3:arm64-${versionImage} --platform linux/arm64
+          docker buildx  build . -t ${registry}/mankianer/todoassistant3:amd64-${versionImage} --platform linux/amd64
 
       - name: push images
         run: |
-          docker push ${registry}/mankianer/todoassistant3:arm64-${version-image}
-          docker push ${registry}/mankianer/todoassistant3:amd64-${version-image}
+          docker push ${registry}/mankianer/todoassistant3:arm64-${versionImage}
+          docker push ${registry}/mankianer/todoassistant3:amd64-${versionImage}
 
       - name: push image-manifest
         run: |
-          docker manifest create ${registry}/mankianer/todoassistant3:${version-image} ${registry}/mankianer/todoassistant3:amd64-${version-image} ${registry}/mankianer/todoassistant3:arm64-${version-image}
-          docker manifest push ${registry}/mankianer/todoassistant3:${version-image}
+          docker manifest create ${registry}/mankianer/todoassistant3:${versionImage} ${registry}/mankianer/todoassistant3:amd64-${versionImage} ${registry}/mankianer/todoassistant3:arm64-${versionImage}
+          docker manifest push ${registry}/mankianer/todoassistant3:${versionImage}
