@@ -42,3 +42,7 @@ tasks.named('test') {
 springBoot {
     mainClass = 'de.mankianer.todoassistant3.ToDoAssistant3Application'
 }
+
+nebulaRelease {
+    releaseBranchPatterns = [/main/,/develop/]
+}
