@@ -4,7 +4,7 @@ ARG app_name='ToDoAssistant'
 ENV app_name=${app_name}
 
 WORKDIR /app
-COPY ./app/build/libs/*.jar ${app_name}.jar
+COPY ./build/libs/*.jar ${app_name}.jar
 EXPOSE 8080
 
 ENV springProfilesActive=''

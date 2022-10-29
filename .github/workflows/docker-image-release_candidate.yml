@@ -5,12 +5,11 @@ on:
     branches: [ "main" ]
 
 jobs:
-  env:
-    registry: ghcr.io
-    image_version: rc-${{ github.run_number }}
-
   build:
     runs-on: ubuntu-latest
+    env:
+      registry: ghcr.io
+      image_version: rc-${{ github.run_number }}
     steps:
       - uses: actions/checkout@v3
       - name: Login to Github Packages
