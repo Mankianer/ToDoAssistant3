@@ -1,8 +1,10 @@
-name: Docker Image CI - snapshot
+name: Docker Image CI
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "develop", "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -45,7 +47,7 @@ jobs:
         run: docker run -d --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle --foreground
 
       - name: build jar
-        run: docker exec build gradle ${releaseTask} bootJar
+        run: docker exec build gradle ${{env.releaseTask}} bootJar
 
       - name: export version
         run: | 
@@ -55,15 +57,15 @@ jobs:
 
       - name: build images
         run: |
-          docker buildx  build . -t ${registry}/mankianer/todoassistant3:arm64-${versionImage} --platform linux/arm64
-          docker buildx  build . -t ${registry}/mankianer/todoassistant3:amd64-${versionImage} --platform linux/amd64
+          docker buildx  build . -t ${{env.registry}}/mankianer/todoassistant3:arm64-${{env.versionImage}} --platform linux/arm64
+          docker buildx  build . -t ${{env.registry}}/mankianer/todoassistant3:amd64-${{env.versionImage}} --platform linux/amd64
 
       - name: push images
         run: |
-          docker push ${registry}/mankianer/todoassistant3:arm64-${versionImage}
-          docker push ${registry}/mankianer/todoassistant3:amd64-${versionImage}
+          docker push ${{env.registry}}/mankianer/todoassistant3:arm64-${{env.versionImage}}
+          docker push ${{env.registry}}/mankianer/todoassistant3:amd64-${{env.versionImage}}
 
       - name: push image-manifest
         run: |
-          docker manifest create ${registry}/mankianer/todoassistant3:${versionImage} ${registry}/mankianer/todoassistant3:amd64-${versionImage} ${registry}/mankianer/todoassistant3:arm64-${versionImage}
-          docker manifest push ${registry}/mankianer/todoassistant3:${versionImage}
+          docker manifest create ${{env.registry}}/mankianer/todoassistant3:${{env.versionImage}} ${{env.registry}}/mankianer/todoassistant3:amd64-${{env.versionImage}} ${{env.registry}}/mankianer/todoassistant3:arm64-${{env.versionImage}}
+          docker manifest push ${{env.registry}}/mankianer/todoassistant3:${{env.versionImage}}
