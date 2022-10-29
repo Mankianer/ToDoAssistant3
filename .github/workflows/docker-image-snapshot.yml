@@ -39,7 +39,7 @@ jobs:
         run: docker run -d --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle --foreground
 
       - name: build jar
-        run: docker run exec build gradle ${release-task} bootJar
+        run: docker exec build gradle ${release-task} bootJar
 
       - name: export version
         run: | 
