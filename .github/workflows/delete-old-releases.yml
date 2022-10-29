@@ -16,5 +16,4 @@ jobs:
           type: container
           names: todoassistant3
           keep: 5
-          version-pattern: 'snapshot'
           dry-run: true
