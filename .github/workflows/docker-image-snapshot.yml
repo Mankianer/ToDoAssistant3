@@ -9,7 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       registry: ghcr.io
-      image_version: snapshot
+      release-task: immutableSnapshot
+
     steps:
       - uses: actions/checkout@v3
       - name: Login to Github Packages
@@ -18,6 +19,11 @@ jobs:
           registry: ${{ env.registry }}
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_PAT }}
+
+      - name: output
+        run: |
+          echo name: ${{ github.event_name }}
+          echo ref: ${{ github.ref_name }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
@@ -28,19 +34,23 @@ jobs:
         run: docker buildx ls
 
       - name: build jar
-        run: docker run --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle immutableSnapshot bootJar
+        run: docker run --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle ${release-task} bootJar --foreground
+
+      - name: export version
+        run: | 
+          export version=$(docker exec build sh -c 'gradle properties ${release-task} | grep ^version: | cut -d":" -f2-')
 
       - name: build images
         run: |
-          docker buildx  build . -t ${registry}/mankianer/todoassistant3:arm64-${image_version} --platform linux/arm64
-          docker buildx  build . -t ${registry}/mankianer/todoassistant3:amd64-${image_version} --platform linux/amd64
+          docker buildx  build . -t ${registry}/mankianer/todoassistant3:arm64-${version} --platform linux/arm64
+          docker buildx  build . -t ${registry}/mankianer/todoassistant3:amd64-${version} --platform linux/amd64
 
       - name: push images
         run: |
-          docker push ${registry}/mankianer/todoassistant3:arm64-${image_version}
-          docker push ${registry}/mankianer/todoassistant3:amd64-${image_version}
+          docker push ${registry}/mankianer/todoassistant3:arm64-${version}
+          docker push ${registry}/mankianer/todoassistant3:amd64-${version}
 
       - name: push image-manifest
         run: |
-          docker manifest create ${registry}/mankianer/todoassistant3:${image_version} ${registry}/mankianer/todoassistant3:amd64-${image_version} ${registry}/mankianer/todoassistant3:arm64-${image_version}
-          docker manifest push ${registry}/mankianer/todoassistant3:${image_version}
+          docker manifest create ${registry}/mankianer/todoassistant3:${version} ${registry}/mankianer/todoassistant3:amd64-${version} ${registry}/mankianer/todoassistant3:arm64-${version}
+          docker manifest push ${registry}/mankianer/todoassistant3:${version}
