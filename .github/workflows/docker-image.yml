@@ -55,6 +55,7 @@ jobs:
       - name: run build-container
         run: |
             docker run -d --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle --foreground
+            docker exec build gradle ls -al
 
       - name: build jar
         run: docker exec build gradle ${{env.releaseTask}} bootJar
