@@ -40,6 +40,7 @@ jobs:
           else
             echo "releaseTask=" >> $GITHUB_ENV
           fi
+          git remote get-url origin
           git remote set-url origin $(git remote get-url origin | sed 's|https://github.com/|https://api:${{secrets.GITHUB_TOKEN}}@github.com/|g')
 
       - name: Set up QEMU
