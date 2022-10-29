@@ -20,10 +20,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_PAT }}
 
-      - name: output
-        run: |
-          echo name: ${{ github.event_name }}
-          echo ref: ${{ github.ref_name }}
+
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
@@ -34,7 +31,7 @@ jobs:
         run: docker buildx ls
 
       - name: build jar
-        run: docker run --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle ${release-task} bootJar --foreground
+        run: docker run --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle ${release-task} bootJar --foreground -d
 
       - name: export version
         run: | 
