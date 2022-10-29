@@ -43,7 +43,7 @@ jobs:
 
       - name: export version
         run: | 
-          echo "version=$(docker exec build sh -c 'gradle properties ${release-task} | grep ^version: | cut -d":" -f2-')" >> $GITHUB_ENV
+          echo "version=$(docker exec build sh -c 'gradle properties ${release-task} | grep ^version: | cut -d":" -f2-' | xargs)" >> $GITHUB_ENV
 
       - name: build images
         run: |
