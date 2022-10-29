@@ -23,18 +23,23 @@ jobs:
 
       - name: Set up env-variables
         run: |
-          if [ "${{ github.ref_name }}" == "develop" ]; then
-          echo "releaseTask=immutableSnapshot" >> $GITHUB_ENV
-          elif [ "${{ github.ref_name }}" == "main" ]; then
           if [ "${{ github.event_name }}" == "push" ]; then
-          echo "releaseTask=final" >> $GITHUB_ENV
+            if [ "${{ github.ref_name }}" == "main" ]; then
+              echo "releaseTask=final" >> $GITHUB_ENV
+            elfi [ "${{ github.ref_name }}" == "develop" ]; then
+              echo "releaseTask=immutableSnapshot" >> $GITHUB_ENV
+            else
+              echo "releaseTask=" >> $GITHUB_ENV
+            fi
+          elfi [ "${{ github.event_name }}" == "pull_request" ]; then
+            if [ "${{ github.base_ref }}" == "main" ]; then
+              echo "releaseTask=final" >> $GITHUB_ENV
+            else
+              echo "releaseTask=" >> $GITHUB_ENV
+            fi
           else
-          echo "releaseTask=candidate" >> $GITHUB_ENV
+            echo "releaseTask=" >> $GITHUB_ENV
           fi
-          else
-          echo "releaseTask=devSnapshot" >> $GITHUB_ENV
-          fi
-          echo "${{github.event}}"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
