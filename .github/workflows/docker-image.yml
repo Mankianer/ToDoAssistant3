@@ -50,7 +50,11 @@ jobs:
         run: docker buildx ls
 
       - name: run build-container
-        run: docker run -d --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle --foreground
+        run: |
+            docker run -d --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle --foreground
+            docker exec build git config --global url."https://api:${{secrets.GITHUB_TOKEN}}@github.com/".insteadOf "https://github.com/"
+            docker exec build git config --global url."https://ssh:${{secrets.GITHUB_TOKEN}}@github.com/".insteadOf "ssh://git@github.com/"
+            docker exec build git config --global url."https://git:${{secrets.GITHUB_TOKEN}}@github.com/".insteadOf "git@github.com:"
 
       - name: build jar
         run: docker exec build gradle ${{env.releaseTask}} bootJar
