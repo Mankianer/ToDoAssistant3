@@ -40,9 +40,7 @@ jobs:
           else
             echo "releaseTask=" >> $GITHUB_ENV
           fi
-          git config --local url."https://api:${{secrets.GITHUB_TOKEN}}@github.com/".insteadOf "https://github.com/"
-          git config --local url."https://ssh:${{secrets.GITHUB_TOKEN}}@github.com/".insteadOf "ssh://git@github.com/"
-          git config --local url."https://git:${{secrets.GITHUB_TOKEN}}@github.com/".insteadOf "git@github.com:"
+          git remote set-url origin $(git remote get-url origin | sed 's|https://github.com/|https://api:${{secrets.GITHUB_TOKEN}}@github.com/|g')
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
