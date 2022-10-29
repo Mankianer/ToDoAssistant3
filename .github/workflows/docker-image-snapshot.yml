@@ -32,16 +32,22 @@ jobs:
         run: |
             docker buildx  build . -t ghcr.io/mankianer/todoassistant3:arm64-snapshot --platform linux/arm64
 
+      - name: push image arm64-snapshot
+        run: |
+          docker push ghcr.io/mankianer/todoassistant3:arm64-snapshot
+
       - name: build image amd64-snapshot
         run: |
           docker buildx  build . -t ghcr.io/mankianer/todoassistant3:amd64-snapshot --platform linux/amd64
+
+      - name: push image amd64-snapshot
+        run: |
+          docker push ghcr.io/mankianer/todoassistant3:amd64-snapshot
 
       - name: build image snapshot
         run: |
           docker manifest create ghcr.io/mankianer/todoassistant3:snapshot ghcr.io/mankianer/todoassistant3:amd64-snapshot ghcr.io/mankianer/todoassistant3:arm64-snapshot
 
-      - name: push images
+      - name: push image snapshot
         run: |
-          docker push ghcr.io/mankianer/todoassistant3:arm64-snapshot
-          docker push ghcr.io/mankianer/todoassistant3:amd64-snapshot
           docker manifest push ghcr.io/mankianer/todoassistant3:snapshot
