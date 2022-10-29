@@ -21,16 +21,16 @@ jobs:
 
       - name: Set up env-variables
         run: |
-          if [ "${{ github.ref_name }}" == "develop" ]; then\
-            echo "release-task=immutableSnapshot" >> $GITHUB_ENV\
-          else if [ "${{ github.ref_name }}" == "main" ]; then\
-            if [ "${{ github.event_name }}" == "push" ]; then\
-              echo "release-task=final" >> $GITHUB_ENV\
-            else\
-              echo "release-task=candidate" >> $GITHUB_ENV\
-            fi\
-          else\
-            echo "release-task=devSnapshot" >> $GITHUB_ENV\
+          if [ "${{ github.ref_name }}" == "develop" ]; then
+          echo "release-task=immutableSnapshot" >> $GITHUB_ENV
+          elif [ "${{ github.ref_name }}" == "main" ]; then
+          if [ "${{ github.event_name }}" == "push" ]; then
+          echo "release-task=final" >> $GITHUB_ENV
+          else
+          echo "release-task=candidate" >> $GITHUB_ENV
+          fi
+          else
+          echo "release-task=devSnapshot" >> $GITHUB_ENV
           fi
 
       - name: Set up QEMU
