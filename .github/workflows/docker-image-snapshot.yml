@@ -20,7 +20,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_PAT }}
 
-
+      - name: Set up env-variables
+        run: |
+          if [ "${{ github.ref_name }}" == "develop" ]; then
+            echo "release-task=candidate ${{ github.event_name }}"
+          fi
+          echo ref: ${{ github.ref_name }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
@@ -30,12 +35,15 @@ jobs:
       - name: run?
         run: docker buildx ls
 
+      - name: run build-container
+        run: docker run -d --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle --foreground
+
       - name: build jar
-        run: docker run -d --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle ${release-task} bootJar --foreground
+        run: docker run exec build gradle ${release-task} bootJar
 
       - name: export version
         run: | 
-          export version=$(docker exec build sh -c 'gradle properties ${release-task} | grep ^version: | cut -d":" -f2-')
+          echo "version=$(docker exec build sh -c 'gradle properties ${release-task} | grep ^version: | cut -d":" -f2-')" >> $GITHUB_ENV
 
       - name: build images
         run: |
