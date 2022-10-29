@@ -1,5 +1,9 @@
 name: Delete old releases
 
+on:
+  push:
+    branches: [ "cleanUp" ]
+
 jobs:
   build:
     steps:
