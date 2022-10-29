@@ -31,7 +31,7 @@ jobs:
         run: docker buildx ls
 
       - name: build jar
-        run: docker run --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle ${release-task} bootJar --foreground -d
+        run: docker run -d --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle ${release-task} bootJar --foreground
 
       - name: export version
         run: | 
