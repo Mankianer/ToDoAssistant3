@@ -9,41 +9,47 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      repository-projects: write
-      contents: write
     env:
       registry: ghcr.io
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Git Login
+        uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
+          global: true
+
       - name: Login to Github Packages
         uses: docker/login-action@v1
         with:
           registry: ${{ env.registry }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_PAT }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up env-variables
         run: |
           if [ "${{ github.event_name }}" == "push" ]; then
-            if [ "${{ github.ref_name }}" == "main" ]; then
-              echo "releaseTask=final" >> $GITHUB_ENV
-            elif [ "${{ github.ref_name }}" == "develop" ]; then
-              echo "releaseTask=devSnapshot" >> $GITHUB_ENV
-            else
-              echo "releaseTask=" >> $GITHUB_ENV
-            fi
-          elif [ "${{ github.event_name }}" == "pull_request" ]; then
-            if [ "${{ github.base_ref }}" == "main" ]; then
-              echo "releaseTask=immutableSnapshot" >> $GITHUB_ENV
-            else
-              echo "releaseTask=" >> $GITHUB_ENV
-            fi
-          else
-            echo "releaseTask=" >> $GITHUB_ENV
+          if [ "${{ github.ref_name }}" == "main" ]; then
+          echo "releaseTask=final" >> $GITHUB_ENV
+          elif [ "${{ github.ref_name }}" == "develop" ]; then
+          export releaseTask=devSnapshot
           fi
-          git log -3
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+          if [ "${{ github.base_ref }}" == "main" ]; then
+          export releaseTask=candidate
+          fi
+          fi
+          echo "releaseTask=${releaseTask}" >> $GITHUB_ENV
+          
+          if [ ${releaseTask} == "final" ] || [ ${releaseTask} == "candidate" ]; then
+          echo "useLastTag=true" >> $GITHUB_ENV
+          else
+          echo "useLastTag=false" >> $GITHUB_ENV
+          fi
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
@@ -57,14 +63,15 @@ jobs:
         run: |
             docker run -d --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle --foreground
 
-      - name: build jar
-        run: docker exec build gradle -Dorg.ajoberstar.grgit.auth.username='api' -Dorg.ajoberstar.grgit.auth.password='${{ secrets.GITHUB_TOKEN }}' ${{env.releaseTask}} bootJar
-
       - name: export version
-        run: | 
-          export version=$(docker exec build sh -c 'gradle properties ${{ env.releaseTask }} | grep ^version: | cut -d":" -f2-' | xargs)
+        run: |
+          export version=$(docker exec build sh -c "gradle -Dorg.ajoberstar.grgit.auth.actor='${{github.actor}}' -Dorg.ajoberstar.grgit.auth.username='GitHub Action' -Dorg.ajoberstar.grgit.auth.email='github-action@users.noreply.github.com' -Dorg.ajoberstar.grgit.auth.password='${{ secrets.GITHUB_TOKEN }}' properties ${{ env.releaseTask }} | grep ^version: | cut -d\":\" -f2- | xargs")
           echo "version=${version}" >> $GITHUB_ENV
           echo "versionImage=$(echo ${version} | sed -e 's/[^a-z|0-9|.|-]/-/g')" >> $GITHUB_ENV
+
+
+      - name: build jar
+        run: docker exec build gradle -Prelease.useLastTag=${{ env.useLastTag }} ${{env.releaseTask}} bootJar
 
       - name: build images
         run: |
