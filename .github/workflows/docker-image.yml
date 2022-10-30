@@ -32,7 +32,7 @@ jobs:
           fi
           elif [ "${{ github.event_name }}" == "pull_request" ]; then
           if [ "${{ github.base_ref }}" == "main" ]; then
-          git checkout ${{ github.base_ref }}
+          git checkout origin/${{ github.head_ref }}
           export releaseTask=candidate
           fi
           fi
