@@ -1,0 +1,37 @@
+name: Delete old releases
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: remove rc releases
+        uses: SmartsquareGmbH/delete-old-packages@v0.5.0
+        with:
+          token: ${{ secrets.GHCR_PAT }}
+          user: mankianer
+          type: container
+          version-pattern: "^(amd64-|arm64-)?\\d+\\.\\d+\\.\\d+-rc\\.\\d+$"
+          names: todoassistant3
+          keep: 0
+      - name: remove devSnapshots releases
+        uses: SmartsquareGmbH/delete-old-packages@v0.5.0
+        with:
+          token: ${{ secrets.GHCR_PAT }}
+          user: mankianer
+          type: container
+          version-pattern: "^(amd64-|arm64-)?\\d+\\.\\d+\\.\\d+-dev\\.\\d+-.{7}$"
+          names: todoassistant3
+          keep: 0
+      - name: keep last 10 releases
+        uses: SmartsquareGmbH/delete-old-packages@v0.5.0
+        with:
+          token: ${{ secrets.GHCR_PAT }}
+          user: mankianer
+          type: container
+          version-pattern: "^(amd64-|arm64-)?\\d+\\.\\d+\\.\\d+$"
+          names: todoassistant3
+          keep: 10
