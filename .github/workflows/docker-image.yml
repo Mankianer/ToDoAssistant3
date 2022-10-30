@@ -7,12 +7,11 @@ on:
     branches: [ "main" ]
 
 jobs:
-  permissions:
-    repository-projects: write
-    contents: write
-
   build:
     runs-on: ubuntu-latest
+    permissions:
+      repository-projects: write
+      contents: write
     env:
       registry: ghcr.io
 
