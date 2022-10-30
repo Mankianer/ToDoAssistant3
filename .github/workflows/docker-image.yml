@@ -52,7 +52,7 @@ jobs:
       - name: run build-container
         run: |
             docker run -d --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle --foreground
-            docker exec build git config --global url."https://api:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://api@github.com/"
+            docker exec build git config --global url."https://api:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
             docker exec build ls -al
 
       - name: build jar
