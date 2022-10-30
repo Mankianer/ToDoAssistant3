@@ -57,7 +57,7 @@ jobs:
             docker exec build ls -al
 
       - name: build jar
-        run: docker exec build gradle ${{env.releaseTask}} bootJar
+        run: docker exec build gradle -Dorg.ajoberstar.grgit.auth.username='api' -Dorg.ajoberstar.grgit.auth.password='${{ secrets.GITHUB_TOKEN }}' ${{env.releaseTask}} bootJar
         env:
           GIT_ASKPASS: echo ${{ secrets.GITHUB_TOKEN }}
 
