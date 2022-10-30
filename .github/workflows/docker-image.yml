@@ -73,6 +73,10 @@ jobs:
 
       - name: set outputs
         id: set_outputs
+        run: |
+          echo "::set-output name=version::${{env.version}}"
+          echo "::set-output name=versionImage::${{env.versionImage}}"
+          echo "::set-output name=releasetask::${{env.releaseTask}}"
         outputs:
           version: ${{env.version}}
           versionImage: ${{env.versionImage}}
