@@ -36,7 +36,7 @@ jobs:
             fi
           elif [ "${{ github.event_name }}" == "pull_request" ]; then
             if [ "${{ github.base_ref }}" == "main" ]; then
-              echo "releaseTask=immutableSnapshot" >> $GITHUB_ENV
+              echo "releaseTask=candidate" >> $GITHUB_ENV
             else
               echo "releaseTask=" >> $GITHUB_ENV
             fi
