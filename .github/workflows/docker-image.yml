@@ -77,8 +77,13 @@ jobs:
         run: |
           docker buildx  build . -t ${{env.registry}}/mankianer/todoassistant3:arm64-${{env.versionImage}} --platform linux/arm64
           docker buildx  build . -t ${{env.registry}}/mankianer/todoassistant3:amd64-${{env.versionImage}} --platform linux/amd64
-          docker manifest create ${{env.registry}}/mankianer/todoassistant3:${{env.versionImage}} ${{env.registry}}/mankianer/todoassistant3:amd64-${{env.versionImage}} ${{env.registry}}/mankianer/todoassistant3:arm64-${{env.versionImage}}
 
-      - name: push image
+      - name: push images
         run: |
+          docker push ${{env.registry}}/mankianer/todoassistant3:arm64-${{env.versionImage}}
+          docker push ${{env.registry}}/mankianer/todoassistant3:amd64-${{env.versionImage}}
+
+      - name: push image-manifest
+        run: |
+          docker manifest create ${{env.registry}}/mankianer/todoassistant3:${{env.versionImage}} ${{env.registry}}/mankianer/todoassistant3:amd64-${{env.versionImage}} ${{env.registry}}/mankianer/todoassistant3:arm64-${{env.versionImage}}
           docker manifest push ${{env.registry}}/mankianer/todoassistant3:${{env.versionImage}}
