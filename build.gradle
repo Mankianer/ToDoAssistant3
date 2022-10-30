@@ -44,5 +44,5 @@ springBoot {
 }
 
 nebulaRelease {
-    releaseBranchPatterns = [/main/,/develop/]
+    releaseBranchPatterns = [/main/,/develop/, /HEAD/]
 }
