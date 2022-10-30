@@ -54,8 +54,9 @@ jobs:
         run: docker buildx ls
 
       - name: export version
-        run: | 
-          export version=$(./gradlew properties ${{ env.releaseTask }} | grep ^version: | cut -d":" -f2- | xargs)
+        run: |
+          ./gradlew ${{ env.releaseTask }} 
+          export version=$(./gradlew -Prelease.useLastTag=true properties ${{ env.releaseTask }} | grep ^version: | cut -d":" -f2- | xargs)
           echo "version=${version}" >> $GITHUB_ENV
           echo "versionImage=$(echo ${version} | sed -e 's/[^a-z|0-9|.|-]/-/g')" >> $GITHUB_ENV
 
