@@ -137,4 +137,4 @@ jobs:
           type: container
           version-pattern: "^(?!((amd64-|arm64-)?\\d+\\.\\d+\\.\\d+$)).*"
           names: todoassistant3
-          keep: 10
+          keep: 0
