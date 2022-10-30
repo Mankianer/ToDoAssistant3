@@ -61,7 +61,7 @@ jobs:
 
       - name: export version
         run: |
-          ./gradlew  ${{ env.releaseTask }} 
+          ./gradlew -Dorg.ajoberstar.grgit.auth.username='${{github.actor}}' -Dorg.ajoberstar.grgit.auth.password='${{ secrets.GITHUB_TOKEN }}' ${{ env.releaseTask }} 
           export version=$(./gradlew -Prelease.useLastTag=true properties ${{ env.releaseTask }} | grep ^version: | cut -d":" -f2- | xargs)
           echo "version=${version}" >> $GITHUB_ENV
           echo "versionImage=$(echo ${version} | sed -e 's/[^a-z|0-9|.|-]/-/g')" >> $GITHUB_ENV
