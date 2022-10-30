@@ -91,8 +91,8 @@ jobs:
       - name: push latest image
         if: ${{ env.releaseTask == 'final' }}
         run: |
-          docker tag ${{env.registry}}/mankianer/todoassistant3:${{env.versionImage}} ${{env.registry}}/mankianer/todoassistant3:latest
-          docker push ${{env.registry}}/mankianer/todoassistant3:latest
+          docker manifest tag ${{env.registry}}/mankianer/todoassistant3:${{env.versionImage}} ${{env.registry}}/mankianer/todoassistant3:latest
+          docker manifest push ${{env.registry}}/mankianer/todoassistant3:latest
 
 
   clean-images:
