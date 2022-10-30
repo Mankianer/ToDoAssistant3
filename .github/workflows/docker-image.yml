@@ -31,26 +31,23 @@ jobs:
       - name: Set up env-variables
         run: |
           if [ "${{ github.event_name }}" == "push" ]; then
-            if [ "${{ github.ref_name }}" == "main" ]; then
-              echo "releaseTask=final" >> $GITHUB_ENV
-            elif [ "${{ github.ref_name }}" == "develop" ]; then
-              export releaseTask=devSnapshot
-            else
-            fi
+          if [ "${{ github.ref_name }}" == "main" ]; then
+          echo "releaseTask=final" >> $GITHUB_ENV
+          elif [ "${{ github.ref_name }}" == "develop" ]; then
+          export releaseTask=devSnapshot
+          fi
           elif [ "${{ github.event_name }}" == "pull_request" ]; then
-            if [ "${{ github.base_ref }}" == "main" ]; then
-              export releaseTask=candidate
-            else
-            fi
-          else
+          if [ "${{ github.base_ref }}" == "main" ]; then
+          export releaseTask=candidate
+          fi
           fi
           echo "releaseTask=${releaseTask}" >> $GITHUB_ENV
-          if [${releaseTask} == "final"] || [${releaseTask} == "candidate"]; then
-            echo "useLastTag=true" >> $GITHUB_ENV
+          
+          if [ ${releaseTask} == "final" ] || [ ${releaseTask} == "candidate" ]; then
+          echo "useLastTag=true" >> $GITHUB_ENV
           else
-            echo "useLastTag=false" >> $GITHUB_ENV
+          echo "useLastTag=false" >> $GITHUB_ENV
           fi
-          #build number as tag
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
