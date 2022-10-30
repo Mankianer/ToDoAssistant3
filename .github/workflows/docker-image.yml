@@ -54,7 +54,7 @@ jobs:
             docker run -d --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle --foreground
 
       - name: build jar
-        run: docker exec build gradle -Dorg.ajoberstar.grgit.auth.username='api' -Dorg.ajoberstar.grgit.auth.password='${{ secrets.GITHUB_TOKEN }}' ${{env.releaseTask}} bootJar
+        run: docker exec build gradle -Dorg.ajoberstar.grgit.auth.username='api' -Dorg.ajoberstar.grgit.auth.password='${{ secrets.GHCR_PAT }}' ${{env.releaseTask}} bootJar
 
       - name: export version
         run: | 
