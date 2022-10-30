@@ -82,6 +82,12 @@ jobs:
           docker manifest create ${{env.registry}}/mankianer/todoassistant3:${{env.versionImage}} ${{env.registry}}/mankianer/todoassistant3:amd64-${{env.versionImage}} ${{env.registry}}/mankianer/todoassistant3:arm64-${{env.versionImage}}
           docker manifest push ${{env.registry}}/mankianer/todoassistant3:${{env.versionImage}}
 
+      - name: push latest image
+        if: ${{ env.releaseTask == 'final' }}
+        run: |
+          docker tag ${{env.registry}}/mankianer/todoassistant3:${{env.versionImage}} ${{env.registry}}/mankianer/todoassistant3:latest
+          docker push ${{env.registry}}/mankianer/todoassistant3:latest
+
       - name: Clean - remove rc releases
         if: ${{ env.ref_name == 'main' }}
         uses: SmartsquareGmbH/delete-old-packages@v0.5.0
