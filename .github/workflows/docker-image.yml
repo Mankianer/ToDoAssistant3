@@ -17,19 +17,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Git Login
-        uses: oleksiyrudenko/gha-git-credentials@v2-latest
-        with:
-          token: '${{ secrets.GITHUB_TOKEN }}'
-          global: true
-
-      - name: Login to Github Packages
-        uses: docker/login-action@v1
-        with:
-          registry: ${{ env.registry }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Set up env-variables
         run: |
           if [ "${{ github.event_name }}" == "push" ]; then
@@ -78,6 +65,13 @@ jobs:
           docker buildx  build . -t ${{env.registry}}/mankianer/todoassistant3:arm64-${{env.versionImage}} --platform linux/arm64
           docker buildx  build . -t ${{env.registry}}/mankianer/todoassistant3:amd64-${{env.versionImage}} --platform linux/amd64
 
+      - name: Login to Github Packages
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.registry }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: push images
         run: |
           docker push ${{env.registry}}/mankianer/todoassistant3:arm64-${{env.versionImage}}
@@ -87,3 +81,34 @@ jobs:
         run: |
           docker manifest create ${{env.registry}}/mankianer/todoassistant3:${{env.versionImage}} ${{env.registry}}/mankianer/todoassistant3:amd64-${{env.versionImage}} ${{env.registry}}/mankianer/todoassistant3:arm64-${{env.versionImage}}
           docker manifest push ${{env.registry}}/mankianer/todoassistant3:${{env.versionImage}}
+
+      - name: Clean - remove rc releases
+        if: ${{ env.ref_name == 'main' }}
+        uses: SmartsquareGmbH/delete-old-packages@v0.5.0
+        with:
+          token: ${{ secrets.GHCR_PAT }}
+          user: mankianer
+          type: container
+          version-pattern: "^(amd64-|arm64-)?\\d+\\.\\d+\\.\\d+-rc\\.\\d+$"
+          names: todoassistant3
+          keep: 0
+      - name: Clean - remove devSnapshots releases
+        if: ${{ env.ref_name == 'main' }}
+        uses: SmartsquareGmbH/delete-old-packages@v0.5.0
+        with:
+          token: ${{ secrets.GHCR_PAT }}
+          user: mankianer
+          type: container
+          version-pattern: "^(amd64-|arm64-)?\\d+\\.\\d+\\.\\d+-dev\\.\\d+-.{7}$"
+          names: todoassistant3
+          keep: 0
+      - name: Clean - keep last 10 releases
+        if: ${{ env.ref_name == 'main' }}
+        uses: SmartsquareGmbH/delete-old-packages@v0.5.0
+        with:
+          token: ${{ secrets.GHCR_PAT }}
+          user: mankianer
+          type: container
+          version-pattern: "^(amd64-|arm64-)?\\d+\\.\\d+\\.\\d+$"
+          names: todoassistant3
+          keep: 10
