@@ -71,27 +71,6 @@ jobs:
           docker buildx  build . -t ${{env.registry}}/mankianer/todoassistant3:arm64-${{env.versionImage}} --platform linux/arm64
           docker buildx  build . -t ${{env.registry}}/mankianer/todoassistant3:amd64-${{env.versionImage}} --platform linux/amd64
 
-      - name: set outputs
-        id: set_outputs
-        run: |
-          echo "::set-output name=version::${{env.version}}"
-          echo "::set-output name=versionImage::${{env.versionImage}}"
-          echo "::set-output name=releasetask::${{env.releaseTask}}"
-        outputs:
-          version: ${{env.version}}
-          versionImage: ${{env.versionImage}}
-          releaseTask: ${{env.releaseTask}}
-
-  publish-images:
-    needs: build
-    name: Publish images
-    runs-on: ubuntu-latest
-    env:
-      version: ${{ needs.set_output.outputs.version }}
-      versionImage: ${{ needs.set_output.outputs.versionImage }}
-      releaseTask: ${{ needs.set_output.outputs.releaseTask }}
-
-    steps:
       - name: Login to Github Packages
         uses: docker/login-action@v1
         with:
@@ -109,6 +88,27 @@ jobs:
           docker manifest create ${{env.registry}}/mankianer/todoassistant3:${{env.versionImage}} ${{env.registry}}/mankianer/todoassistant3:amd64-${{env.versionImage}} ${{env.registry}}/mankianer/todoassistant3:arm64-${{env.versionImage}}
           docker manifest push ${{env.registry}}/mankianer/todoassistant3:${{env.versionImage}}
 
+      - name: set outputs
+        id: set_outputs
+        run: |
+          echo "::set-output name=version::${{env.version}}"
+          echo "::set-output name=versionImage::${{env.versionImage}}"
+          echo "::set-output name=releaseTask::${{env.releaseTask}}"
+    outputs:
+      version: ${{ steps.set_outputs.outputs.version }}
+      versionImage: ${{ steps.set_outputs.outputs.versionImage }}
+      releaseTask: ${{ steps.set_outputs.outputs.releaseTask }}
+
+  publish-latest-images:
+    needs: build
+    name: Publish latest images
+    runs-on: ubuntu-latest
+    env:
+      version: ${{ needs.build.outputs.version }}
+      versionImage: ${{ needs.build.outputs.versionImage }}
+      releaseTask: ${{ needs.build.outputs.releaseTask }}
+
+    steps:
       - name: push latest image
         if: ${{ env.releaseTask == 'final' }}
         run: |
@@ -117,7 +117,7 @@ jobs:
 
 
   clean-images:
-    needs: publish-images
+    needs: build
     name: Clean images
     runs-on: ubuntu-latest
     steps:
