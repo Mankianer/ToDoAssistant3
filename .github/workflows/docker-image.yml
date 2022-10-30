@@ -96,6 +96,7 @@ jobs:
 
 
   clean-images:
+    needs: build
     name: Clean images
     runs-on: ubuntu-latest
     steps:
