@@ -14,7 +14,7 @@ jobs:
           token: ${{ secrets.GHCR_PAT }}
           user: mankianer
           type: container
-          version-pattern: "^[amd64-|arm64-]?\\d+\\.\\d+\\.\\d+-rc\\.\\d+$"
+          version-pattern: "^(amd64-|arm64-)?\\d+\\.\\d+\\.\\d+-rc\\.\\d+$"
           names: todoassistant3
           keep: 0
           dry-run: true
@@ -24,7 +24,7 @@ jobs:
           token: ${{ secrets.GHCR_PAT }}
           user: mankianer
           type: container
-          version-pattern: "^[amd64-|arm64-]?\\d+\\.\\d+\\.\\d+-dev\\.\\d+-.{7}$"
+          version-pattern: "^(amd64-|arm64-)?\\d+\\.\\d+\\.\\d+-dev\\.\\d+-.{7}$"
           names: todoassistant3
           keep: 0
           dry-run: true
@@ -34,7 +34,7 @@ jobs:
           token: ${{ secrets.GHCR_PAT }}
           user: mankianer
           type: container
-          version-pattern: "^[amd64-|arm64-]?\\d+\\.\\d+\\.\\d+$"
+          version-pattern: "^(amd64-|arm64-)?\\d+\\.\\d+\\.\\d+$"
           names: todoassistant3
           keep: 10
           dry-run: true
