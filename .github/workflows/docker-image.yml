@@ -57,16 +57,16 @@ jobs:
       - name: run?
         run: docker buildx ls
 
-      - name: export version
-        run: |
-          ./gradlew -Dorg.ajoberstar.grgit.auth.actor='${{github.actor}}' -Dorg.ajoberstar.grgit.auth.username='GitHub Action' -Dorg.ajoberstar.grgit.auth.email='github-action@users.noreply.github.com' -Dorg.ajoberstar.grgit.auth.password='${{ secrets.GITHUB_TOKEN }}' ${{ env.releaseTask }} 
-          export version=$(./gradlew -Prelease.useLastTag=${{ env.useLastTag }} properties ${{ env.releaseTask }} | grep ^version: | cut -d":" -f2- | xargs)
-          echo "version=${version}" >> $GITHUB_ENV
-          echo "versionImage=$(echo ${version} | sed -e 's/[^a-z|0-9|.|-]/-/g')" >> $GITHUB_ENV
-
       - name: run build-container
         run: |
             docker run -d --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle --foreground
+
+      - name: export version
+        run: |
+          export version=$(docker exec build sh -c 'gradle -Dorg.ajoberstar.grgit.auth.actor='${{github.actor}}' -Dorg.ajoberstar.grgit.auth.username='GitHub Action' -Dorg.ajoberstar.grgit.auth.email='github-action@users.noreply.github.com' -Dorg.ajoberstar.grgit.auth.password='${{ secrets.GITHUB_TOKEN }}' properties ${{ env.releaseTask }} | grep ^version: | cut -d":" -f2- | xargs')
+          echo "version=${version}" >> $GITHUB_ENV
+          echo "versionImage=$(echo ${version} | sed -e 's/[^a-z|0-9|.|-]/-/g')" >> $GITHUB_ENV
+
 
       - name: build jar
         run: docker exec build gradle -Prelease.useLastTag=${{ env.useLastTag }} ${{env.releaseTask}} bootJar
