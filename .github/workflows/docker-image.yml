@@ -52,14 +52,9 @@ jobs:
       - name: run build-container
         run: |
             docker run -d --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle --foreground
-            docker exec build git config --global url."https://api:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
-            docker exec build git config --global credential.helper cache
-            docker exec build ls -al
 
       - name: build jar
         run: docker exec build gradle -Dorg.ajoberstar.grgit.auth.username='api' -Dorg.ajoberstar.grgit.auth.password='${{ secrets.GITHUB_TOKEN }}' ${{env.releaseTask}} bootJar
-        env:
-          GIT_ASKPASS: echo ${{ secrets.GITHUB_TOKEN }}
 
       - name: export version
         run: | 
