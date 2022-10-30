@@ -58,6 +58,8 @@ jobs:
 
       - name: build jar
         run: docker exec build gradle ${{env.releaseTask}} bootJar
+        with:
+          GIT_ASKPASS: echo ${{ secrets.GITHUB_TOKEN }}
 
       - name: export version
         run: | 
