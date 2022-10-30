@@ -34,22 +34,23 @@ jobs:
             if [ "${{ github.ref_name }}" == "main" ]; then
               echo "releaseTask=final" >> $GITHUB_ENV
             elif [ "${{ github.ref_name }}" == "develop" ]; then
-              echo "releaseTask=devSnapshot" >> $GITHUB_ENV
+              export releaseTask=devSnapshot
             else
-              echo "releaseTask=" >> $GITHUB_ENV
             fi
           elif [ "${{ github.event_name }}" == "pull_request" ]; then
             if [ "${{ github.base_ref }}" == "main" ]; then
-              echo "releaseTask=candidate" >> $GITHUB_ENV
+              export releaseTask=candidate
             else
-              echo "releaseTask=" >> $GITHUB_ENV
             fi
           else
-            echo "releaseTask=" >> $GITHUB_ENV
+          fi
+          echo "releaseTask=${releaseTask}" >> $GITHUB_ENV
+          if [${releaseTask} == "final"] || [${releaseTask} == "candidate"]; then
+            echo "useLastTag=true" >> $GITHUB_ENV
+          else
+            echo "useLastTag=false" >> $GITHUB_ENV
           fi
           #build number as tag
-          git tag build-${{ github.run_number }}
-          git push --tags
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
@@ -61,8 +62,8 @@ jobs:
 
       - name: export version
         run: |
-          ./gradlew -Dorg.ajoberstar.grgit.auth.username='${{github.actor}}' -Dorg.ajoberstar.grgit.auth.password='${{ secrets.GITHUB_TOKEN }}' ${{ env.releaseTask }} 
-          export version=$(./gradlew -Prelease.useLastTag=true properties ${{ env.releaseTask }} | grep ^version: | cut -d":" -f2- | xargs)
+          ./gradlew -Dorg.ajoberstar.grgit.auth.actor='${{github.actor}}' -Dorg.ajoberstar.grgit.auth.username='GitHub Action' -Dorg.ajoberstar.grgit.auth.email='github-action@users.noreply.github.com' -Dorg.ajoberstar.grgit.auth.password='${{ secrets.GITHUB_TOKEN }}' ${{ env.releaseTask }} 
+          export version=$(./gradlew -Prelease.useLastTag=${{ env.useLastTag }} properties ${{ env.releaseTask }} | grep ^version: | cut -d":" -f2- | xargs)
           echo "version=${version}" >> $GITHUB_ENV
           echo "versionImage=$(echo ${version} | sed -e 's/[^a-z|0-9|.|-]/-/g')" >> $GITHUB_ENV
 
@@ -71,7 +72,7 @@ jobs:
             docker run -d --name build -v ${PWD}:/home/gradle gradle:jdk18 gradle --foreground
 
       - name: build jar
-        run: docker exec build gradle -Prelease.useLastTag=true ${{env.releaseTask}} bootJar
+        run: docker exec build gradle -Prelease.useLastTag=${{ env.useLastTag }} ${{env.releaseTask}} bootJar
 
       - name: build images
         run: |
