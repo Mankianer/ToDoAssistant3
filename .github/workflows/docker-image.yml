@@ -34,7 +34,7 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" == "push" ]; then
           if [ "${{ github.ref_name }}" == "main" ]; then
-          echo "releaseTask=final" >> $GITHUB_ENV
+          export releaseTask=final
           elif [ "${{ github.ref_name }}" == "develop" ]; then
           export releaseTask=devSnapshot
           fi
