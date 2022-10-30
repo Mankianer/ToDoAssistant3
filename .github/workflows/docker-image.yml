@@ -27,13 +27,13 @@ jobs:
             if [ "${{ github.ref_name }}" == "main" ]; then
               echo "releaseTask=final" >> $GITHUB_ENV
             elif [ "${{ github.ref_name }}" == "develop" ]; then
-              echo "releaseTask=immutableSnapshot" >> $GITHUB_ENV
+              echo "releaseTask=devSnapshot" >> $GITHUB_ENV
             else
               echo "releaseTask=" >> $GITHUB_ENV
             fi
           elif [ "${{ github.event_name }}" == "pull_request" ]; then
             if [ "${{ github.base_ref }}" == "main" ]; then
-              echo "releaseTask=candidate" >> $GITHUB_ENV
+              echo "releaseTask=immutableSnapshot" >> $GITHUB_ENV
             else
               echo "releaseTask=" >> $GITHUB_ENV
             fi
