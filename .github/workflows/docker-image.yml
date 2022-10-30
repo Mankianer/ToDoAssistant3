@@ -9,14 +9,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      repository-projects: write
-      contents: write
     env:
       registry: ghcr.io
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Git Login
+        uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
+
       - name: Login to Github Packages
         uses: docker/login-action@v1
         with:
@@ -43,10 +46,6 @@ jobs:
           else
             echo "releaseTask=" >> $GITHUB_ENV
           fi
-          git log -3
-          git config --global url."https://api:${{ secrets.GHCR_PAT }}@github.com/".insteadOf "https://github.com/"
-          git config --global url."https://ssh:${{ secrets.GHCR_PAT }}@github.com/".insteadOf "ssh://git@github.com/"
-          git config --global url."https://git:${{ secrets.GHCR_PAT }}@github.com/".insteadOf "git@github.com:"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@master
