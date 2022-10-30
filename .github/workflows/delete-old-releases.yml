@@ -18,3 +18,23 @@ jobs:
           names: todoassistant3
           keep: 0
           dry-run: true
+      - name: remove devSnapshots releases
+        uses: SmartsquareGmbH/delete-old-packages@v0.5.0
+        with:
+          token: ${{ secrets.GHCR_PAT }}
+          user: mankianer
+          type: container
+          version-pattern: "^\\d+\\.\\d+\\.\\d+-dev\\.\\d+-.{7}$"
+          names: todoassistant3
+          keep: 0
+          dry-run: true
+      - name: keep last 10 releases
+        uses: SmartsquareGmbH/delete-old-packages@v0.5.0
+        with:
+          token: ${{ secrets.GHCR_PAT }}
+          user: mankianer
+          type: container
+          version-pattern: "^\\d+\\.\\d+\\.\\d+$"
+          names: todoassistant3
+          keep: 10
+          dry-run: true
