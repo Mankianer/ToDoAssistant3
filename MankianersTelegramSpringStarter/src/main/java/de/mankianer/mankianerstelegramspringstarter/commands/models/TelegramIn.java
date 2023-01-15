@@ -3,6 +3,7 @@ package de.mankianer.mankianerstelegramspringstarter.commands.models;
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 public abstract class TelegramIn {
   protected TelegramService telegramService;
@@ -24,9 +25,14 @@ public abstract class TelegramIn {
   }
 
   public void replyAsMarkdown(String messageText) {
+    this.replyAsMarkdown(messageText, null);
+  }
+
+  public void replyAsMarkdown(String messageText, ReplyKeyboardMarkup customKeyboard) {
     SendMessage sendMessage = new SendMessage();
     sendMessage.setText(messageText);
     sendMessage.enableMarkdownV2(true);
+    if(customKeyboard != null) sendMessage.setReplyMarkup(customKeyboard);
     reply(sendMessage);
   }
 

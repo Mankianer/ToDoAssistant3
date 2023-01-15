@@ -1,5 +1,6 @@
 package de.mankianer.mankianerstelegramspringstarter;
 
+import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramConversationInterface;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -11,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 @Log4j2
@@ -20,6 +22,8 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
 
   private final TelegramProperties telegramProperties;
   private final UserHandler fileUserHandler;
+
+  private final TelegramConversationController telegramConversationController;
   private Consumer<Update> invalidCommandHandlerFunction =
       update -> {
         User user = update.getMessage().getFrom();
@@ -38,6 +42,7 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
   public TelegramBot(TelegramProperties telegramProperties, FileUserHandler fileUserHandler) {
     this.telegramProperties = telegramProperties;
     this.fileUserHandler = fileUserHandler;
+    this.telegramConversationController = new TelegramConversationController(this);
   }
 
   /**
@@ -68,6 +73,17 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
     return true;
   }
 
+  @Override
+  public void onUpdatesReceived(List<Update> updates) {
+    if(telegramConversationController.isConversationActive()) {
+      boolean isCommand = updates.stream().filter(update -> update.hasMessage()).anyMatch(update -> update.getMessage().isCommand());
+      if (isCommand) {
+        telegramConversationController.abortCurrentConversation(TelegramConversationInterface.AbortReason.USER_ABORT);
+      }
+    }
+    super.onUpdatesReceived(updates);
+  }
+
   public void registerUser(Message message) {
     fileUserHandler.registerUser(message);
   }
@@ -88,6 +104,7 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
   }
 
   public void sendMessage(SendMessage message) {
+
     try {
       execute(message);
     } catch (TelegramApiException e) {
@@ -95,7 +112,14 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
     }
   }
 
+  public void startConversation(TelegramConversationInterface conversation) {
+    telegramConversationController.startConversation(conversation);
+  }
+
   public void broadcastMessage(SendMessage message) {
+    if(telegramConversationController.isConversationActive()) {
+      telegramConversationController.abortCurrentConversation(TelegramConversationInterface.AbortReason.SYSTEM_ABORT);
+    }
     fileUserHandler.forEach(
         (username, chatId) -> {
           message.setChatId(chatId);
@@ -116,7 +140,11 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
   @Override
   public void processNonCommandUpdate(Update update) {
     if (!handleUserValidation(update.getMessage())) return;
-    messageHandlerFuction.accept(update);
+    if (telegramConversationController.isConversationActive()) {
+      telegramConversationController.onAnswer(update.getMessage().getText());
+    } else {
+      messageHandlerFuction.accept(update);
+    }
   }
 
   @Override
