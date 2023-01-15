@@ -28,6 +28,7 @@ public class TelegramService {
   }
 
   public void sendMessage(SendMessage message) {
+    message.setText(message.getText().replaceAll("-", "\\\\-"));
     telegramBot.sendMessage(message);
   }
 
