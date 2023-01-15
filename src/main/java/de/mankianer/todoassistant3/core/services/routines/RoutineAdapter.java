@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface RoutineAdapter {
     Optional<Routine> load(String id);
     Routine save(Routine routine) throws CouldNotCreateException;
-    void delete(String id);
+    Routine delete(String id);
 
     List<Routine> loadAll();
 }

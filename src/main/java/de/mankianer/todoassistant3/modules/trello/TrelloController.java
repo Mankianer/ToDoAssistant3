@@ -2,6 +2,7 @@ package de.mankianer.todoassistant3.modules.trello;
 
 import de.mankianer.todoassistant3.core.models.message.Message;
 import de.mankianer.todoassistant3.core.services.communication.CommunicationService;
+import de.mankianer.todoassistant3.modules.trello.todo.TrelloToDoService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -12,27 +13,27 @@ import javax.annotation.PostConstruct;
 @Component
 public class TrelloController {
 
-  private final TrelloService trelloService;
+  private final TrelloToDoService trelloToDoService;
   private final CommunicationService communicationService;
 
-  public TrelloController(TrelloService trelloService, CommunicationService communicationService) {
-    this.trelloService = trelloService;
+  public TrelloController(TrelloToDoService trelloToDoService, CommunicationService communicationService) {
+    this.trelloToDoService = trelloToDoService;
     this.communicationService = communicationService;
   }
 
   @PostConstruct
   public void init() {
-    if (trelloService.loadTrelloData()) {
-      communicationService.sendMessage(Message.of("Trello data loaded successfully"));
+    if (trelloToDoService.loadTrelloData()) {
+      communicationService.sendMessage(Message.of("Trello ToDo data loaded successfully"));
     } else {
-      communicationService.sendMessage(Message.of("Trello data loaded failed!"));
+      communicationService.sendMessage(Message.of("Trello ToDo data loaded failed!"));
     }
   }
 
   @Scheduled(cron = "${todo.checkToPlaning.cron.expression}")
   public void checkToPlaningList() {
     String planingCardsWithDueTodayAsMessageWithMarkdown =
-        trelloService.getPlaningCardsWithDueTodayAsMessageWithMarkdown();
+        trelloToDoService.getPlaningCardsWithDueTodayAsMessageWithMarkdown();
     if (!planingCardsWithDueTodayAsMessageWithMarkdown.isBlank()) {
       communicationService.sendMessage(Message.ofMd(planingCardsWithDueTodayAsMessageWithMarkdown));
     }

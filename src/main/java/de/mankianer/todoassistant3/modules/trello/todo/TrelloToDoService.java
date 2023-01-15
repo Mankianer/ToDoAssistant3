@@ -1,4 +1,4 @@
-package de.mankianer.todoassistant3.modules.trello;
+package de.mankianer.todoassistant3.modules.trello.todo;
 
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Board;
@@ -23,11 +23,11 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Service
-public class TrelloService implements ToDoAdapter {
+public class TrelloToDoService implements ToDoAdapter {
 
   private final Trello trelloApi;
 
-  @Value("${trello.boardId}")
+  @Value("${trello.todo.boardId}")
   private String boardId;
 
   private Board board;
@@ -38,7 +38,7 @@ public class TrelloService implements ToDoAdapter {
   private TList doneList;
   private ToDo2CardMapper toDo2CardMapper;
 
-  public TrelloService(
+  public TrelloToDoService(
       @Value("${trello.key}") String trelloKey,
       @Value("${trello.accessToken}") String trelloAccessToken) {
     trelloApi = new TrelloImpl(trelloKey, trelloAccessToken, new ApacheHttpClient());
