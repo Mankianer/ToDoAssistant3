@@ -27,7 +27,7 @@ public class RoutineService {
                 .nextExecution(LocalDateTime.now())
                 .status(RoutineStatus.PLANNED)
                 .build();
-        return this.routineAdapter.save(routine);
+        return this.routineAdapter.save(routine).orElse(null);
     }
 
 

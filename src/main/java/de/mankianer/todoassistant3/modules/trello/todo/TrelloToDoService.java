@@ -55,7 +55,7 @@ public class TrelloToDoService implements ToDoAdapter {
    */
   public boolean loadTrelloData() {
     board = trelloApi.getBoard(boardId);
-    log.info("Trello board: {}", board.getName());
+    log.info("Trello ToDo board: {}", board.getName());
     List<TList> boardLists = board.fetchLists();
     if (boardLists.size() >= 4) {
       planingList = boardLists.get(0);
@@ -67,10 +67,10 @@ public class TrelloToDoService implements ToDoAdapter {
       toDo2CardMapper.addStatusMapping(runningList.getId(), ToDoStatus.IN_PROGRESS);
       toDo2CardMapper.addStatusMapping(doneList.getId(), ToDoStatus.DONE);
 
-      log.info("Load Trello boardList - planingLists: {}", planingList.getName());
-      log.info("Load Trello boardList - toDoList: {}", todoList.getName());
-      log.info("Load Trello boardList - runningList: {}", runningList.getName());
-      log.info("Load Trello boardList - doneList: {}", doneList.getName());
+      log.info("Load Trello Todo boardList - planingLists: {}", planingList.getName());
+      log.info("Load Trello Todo boardList - toDoList: {}", todoList.getName());
+      log.info("Load Trello Todo boardList - runningList: {}", runningList.getName());
+      log.info("Load Trello Todo boardList - doneList: {}", doneList.getName());
       return true;
     } else {
       log.error("Trello board has less than 4 lists");
@@ -100,7 +100,7 @@ public class TrelloToDoService implements ToDoAdapter {
   @Override
   public Optional<ToDo> loadToDo(String id) {
     Card card = trelloApi.getCard(id);
-    return card != null ? Optional.of(toDo2CardMapper.mapCardToToDo(card)): Optional.empty();
+    return Optional.ofNullable(toDo2CardMapper.mapCardToToDo(card));
   }
 
   @Override

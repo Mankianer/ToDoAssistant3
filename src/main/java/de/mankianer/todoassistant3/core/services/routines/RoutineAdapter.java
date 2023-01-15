@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public interface RoutineAdapter {
     Optional<Routine> load(String id);
-    Routine save(Routine routine) throws CouldNotCreateException;
-    Routine delete(String id);
+    Optional<Routine> save(Routine routine) throws CouldNotCreateException;
+    Optional<Routine> delete(String id);
 
     List<Routine> loadAll();
 }
