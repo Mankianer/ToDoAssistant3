@@ -2,7 +2,7 @@ package de.mankianer.mankianerstelegramspringstarter.commands.models;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-import java.util.Map;
+import java.util.Collection;
 
 public interface TelegramConversationInterface {
 
@@ -16,13 +16,15 @@ public interface TelegramConversationInterface {
     SendMessage getMessage();
     void enterConversation();
 
-    void onAnswer(String answer);
+    TelegramConversationInterface onAnswer(String answer);
     void onAbort(AbortReason reason);
 
-    Map<String, TelegramConversationInterface> getListenerMap();
+    Collection<String> getOptions();
+
+    Long getChatId();
 
     default boolean isEndOfConversation() {
-        return getListenerMap().isEmpty();
+        return getOptions().isEmpty();
     }
 
 }

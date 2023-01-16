@@ -4,6 +4,7 @@ import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramConv
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramConversationInterface;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.List;
@@ -23,15 +24,33 @@ public class TelegramConversationController {
         this.currentConversation = conversation;
         conversation.enterConversation();
         SendMessage message = conversation.getMessage();
+//        if(conversation.isEndOfConversation()) {
+//            //TODO: remove keyboard
+//            ReplyKeyboardMarkup replyMarkup = new ReplyKeyboardMarkup();
+//            KeyboardRow e1 = new KeyboardRow();
+//            e1.add("N/A");
+//            replyMarkup.setKeyboard(List.of(e1));
+//            message.setReplyMarkup(replyMarkup);
+//        } else {
+//        }
         message.setReplyMarkup(getCustomKeyboard(conversation));
+        if(conversation.isEndOfConversation()) {
+            currentConversation = null;
+            ReplyKeyboardRemove replyKeyboardRemove = ReplyKeyboardRemove.builder().removeKeyboard(true).build();
+            message.setReplyMarkup(replyKeyboardRemove);
+        }
         telegramBot.sendMessage(message);
     }
 
     public void abortCurrentConversation(TelegramConversationInterface.AbortReason reason) {
         if(currentConversation != null) {
             currentConversation.onAbort(reason);
+            SendMessage abortMessage = getAbortMessage(reason);
+            abortMessage.setChatId(currentConversation.getChatId());
+            ReplyKeyboardRemove replyKeyboardRemove = ReplyKeyboardRemove.builder().removeKeyboard(true).build();
+            abortMessage.setReplyMarkup(replyKeyboardRemove);
+            telegramBot.sendMessage(abortMessage);
             currentConversation = null;
-            telegramBot.sendMessage(getAbortMessage(reason));
         }
     }
 
@@ -41,32 +60,24 @@ public class TelegramConversationController {
                 startConversation(getAbortConversation());
                 return;
             }
-            currentConversation.onAnswer(answer);
-            if(currentConversation.isEndOfConversation()) {
+            var nextConversation = currentConversation.onAnswer(answer);
+            if(nextConversation != null) {
+                startConversation(nextConversation);
+            }else {
                 currentConversation = null;
-            } else {
-                TelegramConversationInterface next = currentConversation.getListenerMap().get(answer);
-                if(next != null) {
-                    startConversation(next);
-                } else {
-                    // Error handling
-                    SendMessage unknownAnswerMessage = new SendMessage();
-                    unknownAnswerMessage.setText("Unbekannte Antwort: " + answer);
-                    unknownAnswerMessage.setReplyMarkup(getCustomKeyboard(currentConversation));
-                    telegramBot.sendMessage(unknownAnswerMessage);
-                }
             }
         }
     }
+
 
     public boolean isConversationActive() {
         return currentConversation != null;
     }
 
     private TelegramConversation getAbortConversation() {
-        return TelegramConversation.builder(ABORT_REQUEST_TEXT)
+        return TelegramConversation.builder(ABORT_REQUEST_TEXT, currentConversation.getChatId())
                 .on("Ja").onAnswer(() -> abortCurrentConversation(TelegramConversationInterface.AbortReason.USER_ABORT)).finish()
-                .on("Nein").onAnswer(() -> startConversation(currentConversation)).finish().build();
+                .on("Nein").then(currentConversation).build();
 
     }
 
@@ -78,18 +89,16 @@ public class TelegramConversationController {
 
     private ReplyKeyboardMarkup getCustomKeyboard(TelegramConversationInterface conversation) {
         KeyboardRow keyboardRow = new KeyboardRow();
-        conversation.getListenerMap().keySet().forEach(keyboardRow::add);
+        conversation.getOptions().forEach(keyboardRow::add);
         KeyboardRow defaultCustomKeyboardOptions = getDefaultCustomKeyboardOptions(!conversation.getMessage().getText().equals(ABORT_REQUEST_TEXT));
         List<KeyboardRow> keyboardRows = List.of(keyboardRow, defaultCustomKeyboardOptions);
-        ReplyKeyboardMarkup keyboard = ReplyKeyboardMarkup.builder().keyboard(keyboardRows).build();
-        keyboard.setSelective(true);
-        keyboard.setResizeKeyboard(true);
-        keyboard.setOneTimeKeyboard(true);
+        ReplyKeyboardMarkup keyboard = ReplyKeyboardMarkup.builder().keyboard(keyboardRows).oneTimeKeyboard(true).resizeKeyboard(true).selective(true).build();
         return keyboard;
     }
 
     private KeyboardRow getDefaultCustomKeyboardOptions(boolean withAbort) {
         KeyboardRow keyboardRow = new KeyboardRow();
+        keyboardRow.add("/help");
         if(withAbort) {
             keyboardRow.add(DEFAULT_ABORT_OPTION);
         }

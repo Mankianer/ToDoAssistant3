@@ -1,6 +1,7 @@
 package de.mankianer.mankianerstelegramspringstarter;
 
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramCommandInterface;
+import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramConversationInterface;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInUpdate;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,6 @@ public class TelegramService {
   }
 
   public void sendMessage(SendMessage message) {
-    message.setText(message.getText().replaceAll("-", "\\\\-"));
     telegramBot.sendMessage(message);
   }
 
@@ -43,6 +43,10 @@ public class TelegramService {
     sendMessage.setText(message);
     sendMessage.enableMarkdownV2(true);
     broadcastMessage(sendMessage);
+  }
+
+  public void startConversation(TelegramConversationInterface conversation) {
+    telegramBot.startConversation(conversation);
   }
 
   public void broadcastMessage(SendMessage message) {
