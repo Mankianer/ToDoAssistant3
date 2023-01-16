@@ -1,6 +1,6 @@
 package de.mankianer.mankianerstelegramspringstarter;
 
-import de.mankianer.mankianerstelegramspringstarter.commands.models.SimpleTelegramConversation;
+import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramConversation;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramConversationInterface;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -63,11 +63,11 @@ public class TelegramConversationController {
         return currentConversation != null;
     }
 
-    private SimpleTelegramConversation getAbortConversation() {
-        SimpleTelegramConversation aborted = SimpleTelegramConversation.builder("Abgebrochen!").build();
-        return SimpleTelegramConversation.builder(ABORT_REQUEST_TEXT)
-                .addConversation("Ja", aborted, () -> abortCurrentConversation(TelegramConversationInterface.AbortReason.USER_ABORT))
-                .addConversation("Nein", currentConversation).build();
+    private TelegramConversation getAbortConversation() {
+        return TelegramConversation.builder(ABORT_REQUEST_TEXT)
+                .on("Ja").onAnswer(() -> abortCurrentConversation(TelegramConversationInterface.AbortReason.USER_ABORT)).finish()
+                .on("Nein").onAnswer(() -> startConversation(currentConversation)).finish().build();
+
     }
 
     private SendMessage getAbortMessage(TelegramConversationInterface.AbortReason reason) {
