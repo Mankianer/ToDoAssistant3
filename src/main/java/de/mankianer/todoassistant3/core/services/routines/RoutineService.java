@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.stream.Stream;
 
 @Log4j2
 @Service
@@ -31,16 +31,17 @@ public class RoutineService {
     }
 
 
-    public List<Routine> getAllRoutines() {
-        return this.routineAdapter.loadAll();
+
+    public Stream<Routine> getAllRoutinesByStatus(RoutineStatus status) {
+        return getAllRoutines().filter(routine -> status.equals(routine.getStatus()));
     }
 
-    public List<Routine> getAllRoutinesByStatus(RoutineStatus status) {
-        return getAllRoutines().stream().filter(routine -> status.equals(routine.getStatus())).toList();
+    public Stream<Routine> getAllRoutines() {
+        return this.routineAdapter.loadAll().stream();
     }
 
     public void updateRoutinesToSchedule() {
-        getAllRoutinesByStatus(RoutineStatus.PLANNED).stream().filter(routine -> routine.getNextExecution().isBefore(LocalDateTime.now().plusHours(12))).forEach(routine -> {
+        getAllRoutinesByStatus(RoutineStatus.PLANNED).filter(routine -> routine.getNextExecution().isBefore(LocalDateTime.now().plusHours(12))).forEach(routine -> {
             routine.setStatus(RoutineStatus.SCHEDULED);
             try {
                 routineAdapter.save(routine);

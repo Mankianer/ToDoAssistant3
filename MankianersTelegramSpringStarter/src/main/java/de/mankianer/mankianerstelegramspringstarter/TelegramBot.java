@@ -104,7 +104,11 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
   }
 
   public void sendMessage(SendMessage message) {
-    message.setText(message.getText().replaceAll("-", "\\\\-"));
+    String escaped_msg = message.getText()
+            .replaceAll("-", "\\\\-")
+            .replaceAll("\\|", "\\\\|")
+            .replaceAll("\\.", "\\\\.");
+    message.setText(escaped_msg);
     try {
       execute(message);
     } catch (TelegramApiException e) {

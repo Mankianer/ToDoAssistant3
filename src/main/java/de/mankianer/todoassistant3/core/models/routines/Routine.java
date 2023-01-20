@@ -2,6 +2,7 @@ package de.mankianer.todoassistant3.core.models.routines;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.scheduling.support.CronExpression;
 
 import java.time.LocalDateTime;
 
@@ -16,5 +17,5 @@ public class Routine {
       private RoutineStatus status;
 
       private LocalDateTime nextExecution;
-      private String cron;
+      private CronExpression cron;
 }

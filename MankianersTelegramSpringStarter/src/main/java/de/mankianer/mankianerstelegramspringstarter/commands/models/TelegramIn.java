@@ -30,8 +30,9 @@ public abstract class TelegramIn {
 
   public void replyAsMarkdown(String messageText, ReplyKeyboardMarkup customKeyboard) {
     SendMessage sendMessage = new SendMessage();
-    sendMessage.setText(messageText);
     sendMessage.enableMarkdownV2(true);
+    sendMessage.setText(messageText);
+
     if(customKeyboard != null) sendMessage.setReplyMarkup(customKeyboard);
     reply(sendMessage);
   }
