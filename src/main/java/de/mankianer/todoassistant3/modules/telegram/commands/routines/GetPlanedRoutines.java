@@ -6,11 +6,13 @@ import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInMe
 import de.mankianer.todoassistant3.core.models.routines.Routine;
 import de.mankianer.todoassistant3.core.models.routines.RoutineStatus;
 import de.mankianer.todoassistant3.core.services.routines.RoutineService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Log4j2
 @Component
 public class GetPlanedRoutines extends TelegramCommand {
 
@@ -19,33 +21,23 @@ public class GetPlanedRoutines extends TelegramCommand {
   public GetPlanedRoutines(TelegramService telegramService, RoutineService routineService) {
     super(
         "routine_plan",
-        "Gibt die Routinen aus, die in den nächsten 7 Tagen eingeplant werden sollen.",
+        "Gibt die Routinen aus, die in den nächsten 7 Tagen eingeplant werden sollen. \nTage können auch per Parameter angegeben werden. (/routine_plan 14)",
         telegramService);
     this.routineService = routineService;
   }
 
   @Override
   public void onExecute(TelegramInMessage message, String[] args) {
+    int days = 7;
+    try {
+      days = Integer.parseInt(args[0]);
+    } catch (Exception e) {
+      log.warn("Could not parse days from args[0] : {}", ((args.length > 1) ? args[0] : "null"));
+    }
 
-    // get all routines with status planed for the next 7 days
-    // formatiere die Routinen in eine Tabelle
-    // sende die Tabelle als Antwort
-    var routines = routineService.getAllRoutinesByStatus(RoutineStatus.PLANNED).filter(routine -> !routine.getNextExecution().isAfter(LocalDateTime.now().plusDays(7))).toList();
-//    String planedRoutinesAsMessageWithMarkdown = Utils.RoutinesToMarkdownMessage(routineService.getAllRoutinesByStatus(RoutineStatus.PLANNED).stream().filter(routine -> !routine.getNextExecution().isAfter(LocalDateTime.now().plusDays(7))).toList());
-//
-//    String planingCardsWithDueTodayAsMessageWithMarkdown = "";
-//    if (args.length > 0 && "all".equals(args[0])) {
-//      planingCardsWithDueTodayAsMessageWithMarkdown = "*Alle dem nächst eingeplanten Routinen:*";
-//      planingCardsWithDueTodayAsMessageWithMarkdown += routineService.getAllRoutinesByStatus(RoutineStatus.PLANNED).stream().
-//    } else {
-//      planingCardsWithDueTodayAsMessageWithMarkdown =
-//          Utils.TodosToMarkdownMessage(routineService.getAllToDosByStatus(ToDoStatus.IN_PLANING).stream().filter(toDo -> !toDo.getDueDate().isAfter(LocalDateTime.now())).toList());
-//      if (planingCardsWithDueTodayAsMessageWithMarkdown.isBlank()) {
-//        planingCardsWithDueTodayAsMessageWithMarkdown =
-//            "Es müssen heute keine Todos eingeplant werden\\.\nMit /plan all kannst du dir alle ToDos in der Planung ausgeben lassen\\.";
-//      }
-//    }
-//
+    final int dayL = days;
+
+    var routines = routineService.getAllRoutinesByStatus(RoutineStatus.PLANNED).filter(routine -> !routine.getNextExecution().isAfter(LocalDateTime.now().plusDays(dayL))).toList();
 
     String messageText = """
             ```
@@ -55,16 +47,6 @@ public class GetPlanedRoutines extends TelegramCommand {
             ```
             """.formatted(getPlanedRoutineTable(routines));
     message.replyAsMarkdown(messageText);
-
-//    TelegramConversation conversation = TelegramConversation.builder("wie geht's?", message.getMessage().getChatId())
-//            .on("gut").then("super").finish()
-//            .on("ok").then("ok")
-//                              .on("und dir?").then("Mir geht es gut!")
-//            .finishToMain()
-//            .on("schlecht").then("oh nein").finish()
-//            .build();
-//
-//    getTelegramService().startConversation(conversation);
   }
 
   private String getPlanedRoutineTable(List<Routine> routines) {
