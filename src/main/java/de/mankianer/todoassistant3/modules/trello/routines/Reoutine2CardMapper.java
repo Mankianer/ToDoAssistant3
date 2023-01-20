@@ -50,6 +50,7 @@ public class Reoutine2CardMapper {
         card.setName(routine.getName());
         card.setDesc(routine.getDescription());
         card.setIdList(listIdMap.get(routine.getStatus()));
+        //TODO add missing fields
         return card;
     }
 
