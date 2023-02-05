@@ -3,12 +3,14 @@ package de.mankianer.todoassistant3.modules.telegram.commands.routines;
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramCommand;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInMessage;
+import de.mankianer.todoassistant3.core.models.routines.Routine;
 import de.mankianer.todoassistant3.core.models.routines.RoutineStatus;
 import de.mankianer.todoassistant3.core.services.routines.RoutineService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Log4j2
 @Component
@@ -37,7 +39,11 @@ public class GetPlanedRoutines extends TelegramCommand {
 
     var routines = routineService.getAllRoutinesByStatus(RoutineStatus.PLANNED).filter(routine -> !routine.getNextExecution().isAfter(LocalDateTime.now().plusDays(dayL))).toList();
 
-    message.replyAsMarkdown("[*Geplante Todos*](" + routineService.getUrlToData() + ")\n" + TelegramRoutineUtils.getRoutineTable(routines));
+    message.replyAsMarkdown(getMessageText(routines, routineService.getUrlToData()));
+  }
+
+  public static String getMessageText(List<Routine> routines, String url) {
+    return "[*Geplante Todos*](" + url + ")\n" + TelegramRoutineUtils.getRoutineTable(routines);
   }
 
 }

@@ -4,22 +4,35 @@ import de.mankianer.mankianerstelegramspringstarter.TelegramService;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInUpdate;
 import de.mankianer.todoassistant3.core.exceptions.CouldNotCreateException;
 import de.mankianer.todoassistant3.core.models.message.Message;
+import de.mankianer.todoassistant3.core.models.routines.Routine;
 import de.mankianer.todoassistant3.core.models.todo.ToDo;
 import de.mankianer.todoassistant3.core.services.communication.CommunicationAdapter;
+import de.mankianer.todoassistant3.core.services.routines.RoutineService;
 import de.mankianer.todoassistant3.core.services.todo.ToDoService;
+import de.mankianer.todoassistant3.modules.telegram.commands.routines.GetPlanedRoutines;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+
+import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Component
 public class TelegramController implements CommunicationAdapter {
 
     private TelegramService telegramService;
     private ToDoService toDoService;
+    private RoutineService routineService;
 
-    public TelegramController(TelegramService telegramService, ToDoService toDoService) {
+    public TelegramController(TelegramService telegramService, ToDoService toDoService, RoutineService routineService) {
         this.telegramService = telegramService;
         this.toDoService = toDoService;
+        this.routineService = routineService;
+    }
+
+    @PostConstruct
+    public void init() {
         telegramService.setMessageHandlerFunction(this::handleIncomingMessage);
+        routineService.setRoutineUpdateToScheduleListener(this::handleRoutinesUpdateToScheduleEvent);
     }
 
     public void handleIncomingMessage(TelegramInUpdate update) {
@@ -57,6 +70,10 @@ public class TelegramController implements CommunicationAdapter {
         }
 
         telegramService.broadcastMessage(sendMessage);
+    }
+
+    private void handleRoutinesUpdateToScheduleEvent(List<Routine> routines) {
+        telegramService.broadcastMessageAsMarkdown(GetPlanedRoutines.getMessageText(routines, routineService.getUrlToData()));
     }
 
 }
