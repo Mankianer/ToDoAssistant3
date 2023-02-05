@@ -1,11 +1,9 @@
 package de.mankianer.todoassistant3.modules.telegram;
 
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
-import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInUpdate;
-import de.mankianer.todoassistant3.core.exceptions.CouldNotCreateException;
-import de.mankianer.todoassistant3.core.models.todos.ToDo;
 import de.mankianer.todoassistant3.core.services.RoutineService;
 import de.mankianer.todoassistant3.core.services.ToDoService;
+import de.mankianer.todoassistant3.modules.telegram.handler.TelegramEventHandler;
 import de.mankianer.todoassistant3.modules.telegram.handler.TelegramRoutineEventHandler;
 import org.springframework.stereotype.Component;
 
@@ -26,18 +24,8 @@ public class TelegramController {
 
     @PostConstruct
     public void init() {
-        telegramService.setMessageHandlerFunction(this::handleIncomingMessage);
+        telegramService.setMessageHandlerFunction(TelegramEventHandler.handleIncomingMessage(toDoService));
         routineService.setRoutineUpdateToScheduleListener(TelegramRoutineEventHandler.handleRoutinesUpdateToScheduleEvent(telegramService, routineService));
-    }
-
-    public void handleIncomingMessage(TelegramInUpdate update) {
-        String text = update.getUpdate().getMessage().getText();
-        try {
-            ToDo toDo = toDoService.createToDo(text, null);
-            update.reply("ToDo wurde erstellt: " + toDo.getUrl());
-        } catch (CouldNotCreateException e) {
-            update.reply("ToDo konnte nicht erstellt werden: \n" + e.getMessage());
-        }
     }
 
 }
