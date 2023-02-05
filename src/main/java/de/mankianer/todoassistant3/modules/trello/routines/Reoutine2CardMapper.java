@@ -2,6 +2,7 @@ package de.mankianer.todoassistant3.modules.trello.routines;
 
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
+import de.mankianer.todoassistant3.Utils;
 import de.mankianer.todoassistant3.core.models.routines.Routine;
 import de.mankianer.todoassistant3.core.models.routines.RoutineStatus;
 import lombok.extern.log4j.Log4j2;
@@ -50,7 +51,7 @@ public class Reoutine2CardMapper {
         card.setName(routine.getName());
         card.setDesc(routine.getDescription());
         card.setIdList(listIdMap.get(routine.getStatus()));
-        //TODO add missing fields
+        card.setDue(Utils.convertToDateViaInstant(routine.getNextExecution()));
         return card;
     }
 

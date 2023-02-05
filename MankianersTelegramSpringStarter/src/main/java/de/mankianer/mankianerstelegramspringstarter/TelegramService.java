@@ -40,8 +40,8 @@ public class TelegramService {
 
   public void broadcastMessageAsMarkdown(String message) {
     SendMessage sendMessage = new SendMessage();
-    sendMessage.setText(message);
     sendMessage.enableMarkdownV2(true);
+    sendMessage.setText(message);
     broadcastMessage(sendMessage);
   }
 

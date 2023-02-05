@@ -40,8 +40,8 @@ public class RoutineService {
         return this.routineAdapter.loadAll().stream();
     }
 
-    public void updateRoutinesToSchedule() {
-        getAllRoutinesByStatus(RoutineStatus.PLANNED).filter(routine -> routine.getNextExecution().isBefore(LocalDateTime.now().plusHours(12))).forEach(routine -> {
+    public void updateRoutinesToSchedule(LocalDateTime nextExecution) {
+        getAllRoutinesByStatus(RoutineStatus.PLANNED).filter(routine -> routine.getNextExecution().isBefore(nextExecution)).forEach(routine -> {
             routine.setStatus(RoutineStatus.SCHEDULED);
             try {
                 routineAdapter.save(routine);

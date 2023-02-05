@@ -39,7 +39,7 @@ public class TelegramConversationController {
             ReplyKeyboardRemove replyKeyboardRemove = ReplyKeyboardRemove.builder().removeKeyboard(true).build();
             message.setReplyMarkup(replyKeyboardRemove);
         }
-        telegramBot.sendMessage(message);
+        sendMessage(message);
     }
 
     public void abortCurrentConversation(TelegramConversationInterface.AbortReason reason) {
@@ -49,8 +49,17 @@ public class TelegramConversationController {
             abortMessage.setChatId(currentConversation.getChatId());
             ReplyKeyboardRemove replyKeyboardRemove = ReplyKeyboardRemove.builder().removeKeyboard(true).build();
             abortMessage.setReplyMarkup(replyKeyboardRemove);
-            telegramBot.sendMessage(abortMessage);
+            sendMessage(abortMessage);
             currentConversation = null;
+        }
+    }
+
+    private void sendMessage(SendMessage message) {
+        if(currentConversation != null && currentConversation.getChatId() != null) {
+            message.setChatId(currentConversation.getChatId());
+            telegramBot.sendMessage(message);
+        } else {
+            telegramBot.broadcastMessage(message);
         }
     }
 
