@@ -1,4 +1,4 @@
-package de.mankianer.todoassistant3.modules.trello.todo;
+package de.mankianer.todoassistant3.modules.trello.adapter;
 
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Board;
@@ -11,6 +11,7 @@ import de.mankianer.todoassistant3.core.adapter.ToDoAdapter;
 import de.mankianer.todoassistant3.core.exceptions.CouldNotCreateException;
 import de.mankianer.todoassistant3.core.models.todos.ToDo;
 import de.mankianer.todoassistant3.core.models.todos.ToDoStatus;
+import de.mankianer.todoassistant3.modules.trello.utils.todos.ToDo2CardMapper;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Service
-public class TrelloToDoService implements ToDoAdapter {
+public class TrelloToDoAdapter implements ToDoAdapter {
 
   private final Trello trelloApi;
 
@@ -38,7 +39,7 @@ public class TrelloToDoService implements ToDoAdapter {
   private TList doneList;
   private ToDo2CardMapper toDo2CardMapper;
 
-  public TrelloToDoService(
+  public TrelloToDoAdapter(
       @Value("${trello.key}") String trelloKey,
       @Value("${trello.accessToken}") String trelloAccessToken) {
     trelloApi = new TrelloImpl(trelloKey, trelloAccessToken, new ApacheHttpClient());

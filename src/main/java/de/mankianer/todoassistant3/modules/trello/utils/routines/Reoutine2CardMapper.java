@@ -1,4 +1,4 @@
-package de.mankianer.todoassistant3.modules.trello.routines;
+package de.mankianer.todoassistant3.modules.trello.utils.routines;
 
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;

@@ -1,4 +1,4 @@
-package de.mankianer.todoassistant3.modules.trello.routines;
+package de.mankianer.todoassistant3.modules.trello.adapter;
 
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Board;
@@ -10,6 +10,7 @@ import de.mankianer.todoassistant3.core.adapter.RoutineAdapter;
 import de.mankianer.todoassistant3.core.exceptions.CouldNotCreateException;
 import de.mankianer.todoassistant3.core.models.routines.Routine;
 import de.mankianer.todoassistant3.core.models.routines.RoutineStatus;
+import de.mankianer.todoassistant3.modules.trello.utils.routines.Reoutine2CardMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ import java.util.Optional;
 
 @Log4j2
 @Service
-public class TrelloRoutineService implements RoutineAdapter {
+public class TrelloRoutineAdapter implements RoutineAdapter {
 
     private final Trello trelloApi;
 
@@ -35,7 +36,7 @@ public class TrelloRoutineService implements RoutineAdapter {
     private TList runningList;
     private TList disableList;
 
-    public TrelloRoutineService(
+    public TrelloRoutineAdapter(
             @Value("${trello.key}") String trelloKey,
             @Value("${trello.accessToken}") String trelloAccessToken) {
         trelloApi = new TrelloImpl(trelloKey, trelloAccessToken, new ApacheHttpClient());
