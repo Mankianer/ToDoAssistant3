@@ -2,9 +2,9 @@ package de.mankianer.todoassistant3.modules.trello.utils.routines;
 
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
-import de.mankianer.todoassistant3.Utils;
 import de.mankianer.todoassistant3.core.models.routines.Routine;
 import de.mankianer.todoassistant3.core.models.routines.RoutineStatus;
+import de.mankianer.todoassistant3.modules.trello.utils.TrelloUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.lang.NonNull;
 import org.springframework.scheduling.support.CronExpression;
@@ -51,7 +51,7 @@ public class Reoutine2CardMapper {
         card.setName(routine.getName());
         card.setDesc(routine.getDescription());
         card.setIdList(listIdMap.get(routine.getStatus()));
-        card.setDue(Utils.convertToDateViaInstant(routine.getNextExecution()));
+        card.setDue(TrelloUtils.convertToDateViaInstant(routine.getNextExecution()));
         return card;
     }
 

@@ -6,7 +6,6 @@ import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.TList;
 import com.julienvey.trello.impl.TrelloImpl;
 import com.julienvey.trello.impl.http.ApacheHttpClient;
-import de.mankianer.todoassistant3.Utils;
 import de.mankianer.todoassistant3.core.adapter.ToDoAdapter;
 import de.mankianer.todoassistant3.core.exceptions.CouldNotCreateException;
 import de.mankianer.todoassistant3.core.models.todos.ToDo;
@@ -81,21 +80,6 @@ public class TrelloToDoAdapter implements ToDoAdapter {
 
   public List<Card> getCards(TList list) {
     return trelloApi.getListCards(list.getId());
-  }
-
-  public List<Card> getPlaningCardsWithDueToday() {
-    return trelloApi.getListCards(planingList.getId()).stream()
-        .filter(card -> card.getDue() != null && Utils.isBevorOrToday(card.getDue()))
-        .collect(Collectors.toList());
-  }
-
-  public String getPlaningCardsWithDueTodayAsMessageWithMarkdown() {
-    List<Card> planingCardsWithDueToday = getPlaningCardsWithDueToday();
-    if (planingCardsWithDueToday.size() == 0) {
-      return "";
-    }
-    return "Folgende ToDos stehen in Planung, die heute eingeplant werden müssen:\n  Du kannst diese mit /plan erneut abfragen\n"
-        + Utils.CardsToMarkdownMessage(planingCardsWithDueToday);
   }
 
   @Override

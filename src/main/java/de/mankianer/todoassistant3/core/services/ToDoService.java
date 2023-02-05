@@ -1,5 +1,6 @@
 package de.mankianer.todoassistant3.core.services;
 
+import de.mankianer.todoassistant3.Utils;
 import de.mankianer.todoassistant3.core.adapter.ToDoAdapter;
 import de.mankianer.todoassistant3.core.exceptions.CouldNotCreateException;
 import de.mankianer.todoassistant3.core.models.todos.ToDo;
@@ -42,4 +43,11 @@ public class ToDoService {
     public List<ToDo> getAllToDosByStatus(ToDoStatus status) {
         return getAllToDos().stream().filter(todo -> status.equals(todo.getStatus())).toList();
     }
+
+    public List<ToDo> getPlaningCardsWithDueToday() {
+        return getAllToDosByStatus(ToDoStatus.IN_PLANING).stream()
+                .filter(todo -> todo.getDueDate() != null && Utils.isBevorOrToday(todo.getDueDate()))
+                .toList();
+    }
+
 }
