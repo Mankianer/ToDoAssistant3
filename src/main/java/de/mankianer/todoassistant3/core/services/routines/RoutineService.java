@@ -44,7 +44,7 @@ public class RoutineService {
     }
 
     public Stream<Routine> getAllRoutines() {
-        return this.routineAdapter.loadAll().stream();
+        return this.routineAdapter.loadAll().stream().sorted((o1, o2) -> o1.getNextExecution().compareTo(o2.getNextExecution()));
     }
 
     public void updateRoutinesToSchedule(LocalDateTime nextExecution) {
