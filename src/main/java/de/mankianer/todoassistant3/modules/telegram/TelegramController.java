@@ -1,25 +1,48 @@
 package de.mankianer.todoassistant3.modules.telegram;
 
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
+import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramConversation;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInUpdate;
 import de.mankianer.todoassistant3.core.exceptions.CouldNotCreateException;
 import de.mankianer.todoassistant3.core.models.message.Message;
+import de.mankianer.todoassistant3.core.models.routines.Routine;
 import de.mankianer.todoassistant3.core.models.todo.ToDo;
 import de.mankianer.todoassistant3.core.services.communication.CommunicationAdapter;
+import de.mankianer.todoassistant3.core.services.routines.RoutineService;
 import de.mankianer.todoassistant3.core.services.todo.ToDoService;
+import de.mankianer.todoassistant3.modules.telegram.commands.routines.TelegramRoutineUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+
+import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Component
 public class TelegramController implements CommunicationAdapter {
 
     private TelegramService telegramService;
     private ToDoService toDoService;
+    private RoutineService routineService;
 
-    public TelegramController(TelegramService telegramService, ToDoService toDoService) {
+    public TelegramController(TelegramService telegramService, ToDoService toDoService, RoutineService routineService) {
         this.telegramService = telegramService;
         this.toDoService = toDoService;
+        this.routineService = routineService;
+    }
+
+    @PostConstruct
+    public void init() {
         telegramService.setMessageHandlerFunction(this::handleIncomingMessage);
+        routineService.setRoutineUpdateListener(this::handleRoutineUpdate);
+    }
+
+    private void handleRoutineUpdate(List<Routine> routines) {
+        String message = """
+                *Heutige Routinen Aufgaben:*
+                %s
+                """.formatted(TelegramRoutineUtils.getRoutineTable(routines));
+        TelegramConversation.builder(message, null).on("ok").then("Mit /routine_scheduled heutige Routine abfragen!").build();
+        telegramService.broadcastMessageAsMarkdown(message);
     }
 
     public void handleIncomingMessage(TelegramInUpdate update) {

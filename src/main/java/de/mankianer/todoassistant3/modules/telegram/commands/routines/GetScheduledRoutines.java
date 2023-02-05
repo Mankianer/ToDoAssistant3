@@ -3,20 +3,16 @@ package de.mankianer.todoassistant3.modules.telegram.commands.routines;
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramCommand;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInMessage;
-import de.mankianer.todoassistant3.core.models.routines.Routine;
 import de.mankianer.todoassistant3.core.models.routines.RoutineStatus;
 import de.mankianer.todoassistant3.core.services.routines.RoutineService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Log4j2
 @Component
 public class GetScheduledRoutines extends TelegramCommand {
 
   private final RoutineService routineService;
-
   public GetScheduledRoutines(TelegramService telegramService, RoutineService routineService) {
     super(
         "routine_scheduled",
@@ -27,29 +23,7 @@ public class GetScheduledRoutines extends TelegramCommand {
 
   @Override
   public void onExecute(TelegramInMessage message, String[] args) {
-
-
     var routines = routineService.getAllRoutinesByStatus(RoutineStatus.SCHEDULED).toList();
-
-    String messageText = """
-            ```
-            |NR|Name                |Zeit     |
-            |--|--------------------|---------|
-            %s
-            ```
-            """.formatted(getPlanedRoutineTable(routines));
-    message.replyAsMarkdown(messageText);
-  }
-
-  private String getPlanedRoutineTable(List<Routine> routines) {
-    StringBuilder table = new StringBuilder();
-    for (int i = 0; i < routines.size(); i++) {
-      table.append(getPlanedRoutineTableRow(i, routines.get(i)));
-    }
-    return table.toString();
-  }
-
-  private String getPlanedRoutineTableRow(int pos, Routine routine) {
-    return "|%2d|%-20s|%3$tH.%3$tM-%3$ta|\n".formatted(pos, routine.getName(), routine.getNextExecution());
+    message.replyAsMarkdown(TelegramRoutineUtils.getRoutineTable(routines));
   }
 }
