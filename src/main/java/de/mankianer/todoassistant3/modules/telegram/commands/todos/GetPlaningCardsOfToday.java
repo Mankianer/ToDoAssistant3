@@ -2,7 +2,6 @@ package de.mankianer.todoassistant3.modules.telegram.commands.todos;
 
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramCommand;
-import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramConversation;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInMessage;
 import de.mankianer.todoassistant3.Utils;
 import de.mankianer.todoassistant3.core.models.todos.ToDoStatus;
@@ -42,15 +41,5 @@ public class GetPlaningCardsOfToday extends TelegramCommand {
     }
 
     message.replyAsMarkdown(planingCardsWithDueTodayAsMessageWithMarkdown);
-
-    TelegramConversation conversation = TelegramConversation.builder("wie geht's?", message.getMessage().getChatId())
-            .on("gut").then("super").finish()
-            .on("ok").then("ok")
-                              .on("und dir?").then("Mir geht es gut!")
-            .finishToMain()
-            .on("schlecht").then("oh nein").finish()
-            .build();
-
-    getTelegramService().startConversation(conversation);
   }
 }
