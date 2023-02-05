@@ -2,13 +2,13 @@ package de.mankianer.todoassistant3.modules.telegram;
 
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInUpdate;
+import de.mankianer.todoassistant3.core.adapter.CommunicationAdapter;
 import de.mankianer.todoassistant3.core.exceptions.CouldNotCreateException;
-import de.mankianer.todoassistant3.core.models.message.Message;
+import de.mankianer.todoassistant3.core.models.communication.Message;
 import de.mankianer.todoassistant3.core.models.routines.Routine;
 import de.mankianer.todoassistant3.core.models.todo.ToDo;
-import de.mankianer.todoassistant3.core.services.communication.CommunicationAdapter;
-import de.mankianer.todoassistant3.core.services.routines.RoutineService;
-import de.mankianer.todoassistant3.core.services.todo.ToDoService;
+import de.mankianer.todoassistant3.core.services.RoutineService;
+import de.mankianer.todoassistant3.core.services.ToDoService;
 import de.mankianer.todoassistant3.modules.telegram.commands.routines.GetPlanedRoutines;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

@@ -1,5 +1,6 @@
-package de.mankianer.todoassistant3.core.services.todo;
+package de.mankianer.todoassistant3.core.services;
 
+import de.mankianer.todoassistant3.core.adapter.ToDoAdapter;
 import de.mankianer.todoassistant3.core.exceptions.CouldNotCreateException;
 import de.mankianer.todoassistant3.core.models.todo.ToDo;
 import de.mankianer.todoassistant3.core.models.todo.ToDoStatus;

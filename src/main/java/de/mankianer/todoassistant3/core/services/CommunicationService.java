@@ -1,6 +1,7 @@
-package de.mankianer.todoassistant3.core.services.communication;
+package de.mankianer.todoassistant3.core.services;
 
-import de.mankianer.todoassistant3.core.models.message.Message;
+import de.mankianer.todoassistant3.core.adapter.CommunicationAdapter;
+import de.mankianer.todoassistant3.core.models.communication.Message;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 

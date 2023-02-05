@@ -1,4 +1,4 @@
-package de.mankianer.todoassistant3.core.services.routines;
+package de.mankianer.todoassistant3.core.adapter;
 
 import de.mankianer.todoassistant3.core.exceptions.CouldNotCreateException;
 import de.mankianer.todoassistant3.core.models.routines.Routine;

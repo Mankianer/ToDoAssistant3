@@ -5,7 +5,7 @@ import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramComm
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInMessage;
 import de.mankianer.todoassistant3.core.models.routines.Routine;
 import de.mankianer.todoassistant3.core.models.routines.RoutineStatus;
-import de.mankianer.todoassistant3.core.services.routines.RoutineService;
+import de.mankianer.todoassistant3.core.services.RoutineService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 

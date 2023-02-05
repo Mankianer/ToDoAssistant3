@@ -6,7 +6,7 @@ import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramConv
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInMessage;
 import de.mankianer.todoassistant3.Utils;
 import de.mankianer.todoassistant3.core.models.todo.ToDoStatus;
-import de.mankianer.todoassistant3.core.services.todo.ToDoService;
+import de.mankianer.todoassistant3.core.services.ToDoService;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

@@ -1,7 +1,7 @@
 package de.mankianer.todoassistant3.modules.trello;
 
-import de.mankianer.todoassistant3.core.models.message.Message;
-import de.mankianer.todoassistant3.core.services.communication.CommunicationService;
+import de.mankianer.todoassistant3.core.models.communication.Message;
+import de.mankianer.todoassistant3.core.services.CommunicationService;
 import de.mankianer.todoassistant3.modules.trello.routines.TrelloRoutineService;
 import de.mankianer.todoassistant3.modules.trello.todo.TrelloToDoService;
 import lombok.extern.log4j.Log4j2;
