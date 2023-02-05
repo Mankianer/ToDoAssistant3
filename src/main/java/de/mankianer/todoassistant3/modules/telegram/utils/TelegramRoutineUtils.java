@@ -1,4 +1,4 @@
-package de.mankianer.todoassistant3.modules.telegram.commands.routines;
+package de.mankianer.todoassistant3.modules.telegram.utils;
 
 import de.mankianer.todoassistant3.core.models.routines.Routine;
 import de.mankianer.todoassistant3.core.models.routines.RoutineStatus;

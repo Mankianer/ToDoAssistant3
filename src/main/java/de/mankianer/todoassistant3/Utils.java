@@ -1,7 +1,7 @@
 package de.mankianer.todoassistant3;
 
 import com.julienvey.trello.domain.Card;
-import de.mankianer.todoassistant3.core.models.todo.ToDo;
+import de.mankianer.todoassistant3.core.models.todos.ToDo;
 import lombok.NonNull;
 
 import java.time.LocalDate;

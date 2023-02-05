@@ -1,11 +1,11 @@
-package de.mankianer.todoassistant3.modules.telegram.commands;
+package de.mankianer.todoassistant3.modules.telegram.commands.todos;
 
 import de.mankianer.mankianerstelegramspringstarter.TelegramService;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramCommand;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramConversation;
 import de.mankianer.mankianerstelegramspringstarter.commands.models.TelegramInMessage;
 import de.mankianer.todoassistant3.Utils;
-import de.mankianer.todoassistant3.core.models.todo.ToDoStatus;
+import de.mankianer.todoassistant3.core.models.todos.ToDoStatus;
 import de.mankianer.todoassistant3.core.services.ToDoService;
 import org.springframework.stereotype.Component;
 
