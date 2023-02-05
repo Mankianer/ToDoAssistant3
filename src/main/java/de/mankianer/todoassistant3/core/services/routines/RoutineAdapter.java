@@ -12,4 +12,6 @@ public interface RoutineAdapter {
     Optional<Routine> delete(String id);
 
     List<Routine> loadAll();
+
+    String getUrlToData();
 }

@@ -50,4 +50,8 @@ public class RoutineService {
             }
         });
     }
+
+    public String getUrlToData() {
+        return this.routineAdapter.getUrlToData();
+    }
 }

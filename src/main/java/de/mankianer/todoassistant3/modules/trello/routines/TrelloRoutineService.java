@@ -99,4 +99,9 @@ public class TrelloRoutineService implements RoutineAdapter {
     public List<Routine> loadAll() {
         return board.fetchCards().stream().map(routine2CardMapper::mapCardToRoutine).toList();
     }
+
+    @Override
+    public String getUrlToData() {
+        return board.getShortUrl();
+    }
 }
